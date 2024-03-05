@@ -7,6 +7,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Inputs } from "../components/input.js";
+import {
+  PRIMARY_DARK_COLOR,
+  PRIMARY_BLUE_ACCENT_COLOR,
+  TEXT_WHITE_COLOR,
+  TEXT_WHITE_GREY_COLOR,
+} from "../constant.js";
 
 export class LoginScreen extends React.Component {
   render() {
@@ -21,7 +27,7 @@ export class LoginScreen extends React.Component {
           <Text style={styles.helpWithAuthorization}>Forgot Password?</Text>
         </TouchableOpacity>
         <Pressable
-          color="#12CDD9"
+          color={PRIMARY_BLUE_ACCENT_COLOR}
           style={styles.buttonOnLoginScreen}
           onPress={() => this.props.navigation.navigate("Home")}
         >
@@ -35,12 +41,12 @@ export class LoginScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1F1D2B",
+    backgroundColor: PRIMARY_DARK_COLOR,
     alignItems: "center",
     justifyContent: "center",
   },
   greetings: {
-    color: "#FFFFFF",
+    color: TEXT_WHITE_COLOR,
     fontSize: 24,
     // fontFamily: "Montserrat-SemiBold",
     marginBottom: 8,
@@ -48,7 +54,7 @@ const styles = StyleSheet.create({
   action: {
     width: 177,
     textAlign: "center",
-    color: "#F1F1F5",
+    color: TEXT_WHITE_GREY_COLOR,
     fontSize: 12,
     marginBottom: 64,
   },
@@ -58,18 +64,18 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   helpWithAuthorization: {
-    color: "#12CDD9",
+    color: PRIMARY_BLUE_ACCENT_COLOR,
   },
   buttonOnLoginScreen: {
     width: 327,
     height: 56,
     borderRadius: 32,
-    backgroundColor: "#12CDD9",
+    backgroundColor: PRIMARY_BLUE_ACCENT_COLOR,
   },
   buttonText: {
     textAlign: "center",
     lineHeight: 56,
     fontSize: 16,
-    color: "white",
+    color: TEXT_WHITE_COLOR,
   },
 });

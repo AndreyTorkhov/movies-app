@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, View, StyleSheet, Button } from "react-native";
+import { TEXT_WHITE_COLOR } from "../constant.js";
 
 export class HomeScreen extends React.Component {
   render() {
@@ -19,7 +20,7 @@ export class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: TEXT_WHITE_COLOR,
     alignItems: "center",
     justifyContent: "center",
   },
