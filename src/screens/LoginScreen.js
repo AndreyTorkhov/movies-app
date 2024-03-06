@@ -22,7 +22,8 @@ export class LoginScreen extends React.Component {
         <Text style={styles.action}>
           Welcome back! Please enter your details.
         </Text>
-        <Inputs style={styles.input} />
+
+        <Inputs />
         <TouchableOpacity style={styles.containerOfHelpWithAuthorization}>
           <Text style={styles.helpWithAuthorization}>Forgot Password?</Text>
         </TouchableOpacity>
