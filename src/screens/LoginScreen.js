@@ -1,10 +1,13 @@
 import React from "react";
+import { Platform } from "react-native";
 import {
   Text,
-  View,
+  ScrollView,
   StyleSheet,
   Pressable,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Keyboard,
 } from "react-native";
 import { Inputs } from "../components/input.js";
 import {
@@ -15,11 +18,46 @@ import {
 } from "../constant.js";
 
 export class LoginScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isKeyboardVisible: false,
+    };
+  }
+
+  componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      this._keyboardDidShow
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      this._keyboardDidHide
+    );
+  }
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+
+  _keyboardDidShow = () => {
+    this.setState({ isKeyboardVisible: true });
+  };
+
+  _keyboardDidHide = () => {
+    this.setState({ isKeyboardVisible: false });
+  };
+
   render() {
+    const { isKeyboardVisible } = this.state;
+
     return (
-      <View style={styles.container}>
-        <Text style={styles.greetings}>Hi, Tiffany</Text>
-        <Text style={styles.action}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={[styles.greetings, isKeyboardVisible && styles.hidden]}>
+          Hi, Tiffany
+        </Text>
+        <Text style={[styles.action, isKeyboardVisible && styles.hidden]}>
           Welcome back! Please enter your details.
         </Text>
 
@@ -27,6 +65,7 @@ export class LoginScreen extends React.Component {
         <TouchableOpacity style={styles.containerOfHelpWithAuthorization}>
           <Text style={styles.helpWithAuthorization}>Forgot Password?</Text>
         </TouchableOpacity>
+
         <Pressable
           color={PRIMARY_BLUE_ACCENT_COLOR}
           style={styles.buttonOnLoginScreen}
@@ -34,14 +73,14 @@ export class LoginScreen extends React.Component {
         >
           <Text style={styles.buttonText}>Login</Text>
         </Pressable>
-      </View>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: PRIMARY_DARK_COLOR,
     alignItems: "center",
     justifyContent: "center",
@@ -49,7 +88,6 @@ const styles = StyleSheet.create({
   greetings: {
     color: TEXT_WHITE_COLOR,
     fontSize: 24,
-    // fontFamily: "Montserrat-SemiBold",
     marginBottom: 8,
   },
   action: {
@@ -78,5 +116,8 @@ const styles = StyleSheet.create({
     lineHeight: 56,
     fontSize: 16,
     color: TEXT_WHITE_COLOR,
+  },
+  hidden: {
+    display: "none",
   },
 });

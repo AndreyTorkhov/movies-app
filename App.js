@@ -1,6 +1,6 @@
 import * as React from "react";
-// import { StatusBar } from "expo-status-bar";
 // import { Image, TouchableOpacity } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { HomeScreen } from "./src/screens/HomeScreen";
@@ -60,6 +60,7 @@ export default function App() {
           }}
         />
       </Stack.Navigator>
+      <StatusBar style="light" />
     </NavigationContainer>
   );
 }

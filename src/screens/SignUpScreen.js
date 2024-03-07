@@ -1,4 +1,5 @@
 import React from "react";
+import { Platform } from "react-native";
 import {
   Text,
   View,
@@ -6,6 +7,8 @@ import {
   Pressable,
   TouchableOpacity,
   TextInput,
+  KeyboardAvoidingView,
+  Keyboard,
 } from "react-native";
 import { Inputs } from "../components/input.js";
 import { CheckBox } from "../components/check_box.js";
@@ -19,19 +22,61 @@ import {
 } from "../constant.js";
 
 export class SignUpScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isKeyboardVisible: false,
+      isFullNameFilled: false,
+    };
+  }
+
+  componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      this._keyboardDidShow
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      this._keyboardDidHide
+    );
+  }
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+
+  _keyboardDidShow = () => {
+    this.setState({ isKeyboardVisible: true });
+  };
+
+  _keyboardDidHide = () => {
+    this.setState({ isKeyboardVisible: false });
+  };
+
   render() {
+    const { isKeyboardVisible } = this.state;
+
     return (
-      <View style={styles.container}>
-        <Text style={styles.greetings}>Let's get started</Text>
-        <Text style={styles.action}>The latest movies and series are here</Text>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+      >
+        <Text style={[styles.greetings, isKeyboardVisible && styles.hidden]}>
+          Let's get started
+        </Text>
+        <Text style={[styles.action, isKeyboardVisible && styles.hidden]}>
+          The latest movies and series are here
+        </Text>
         <View style={styles.placeholder_container_name}>
           <Text style={styles.placeholder_name}>Full Name</Text>
         </View>
         <TextInput
           style={styles.input}
-          underlineColorAndroid="transparent"
+          underlineColor="transparent"
           autoCapitalize="none"
-          //   onChangeText={this.handleEmail}
+          onChangeText={this.handleFullNameChange}
         />
         <Inputs />
         <View style={styles.checkboxContainer}>
@@ -47,7 +92,7 @@ export class SignUpScreen extends React.Component {
         >
           <Text style={styles.buttonText}>Sign Up</Text>
         </Pressable>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -62,7 +107,6 @@ const styles = StyleSheet.create({
   greetings: {
     color: TEXT_WHITE_COLOR,
     fontSize: 24,
-    // fontFamily: "Montserrat-SemiBold",
     marginBottom: 8,
   },
   action: {
@@ -118,5 +162,8 @@ const styles = StyleSheet.create({
     color: TEXT_WHITE_GREY_COLOR,
     fontSize: 14,
     marginLeft: 8,
+  },
+  hidden: {
+    display: "none",
   },
 });

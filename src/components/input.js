@@ -41,7 +41,7 @@ export class Inputs extends Component {
         </View>
         <TextInput
           style={styles.input}
-          underlineColorAndroid="transparent"
+          underlineColor="transparent"
           autoCapitalize="none"
           onChangeText={this.handleEmail}
         />
@@ -52,7 +52,7 @@ export class Inputs extends Component {
         <TextInput
           style={styles.input}
           secureTextEntry={!passwordVisible}
-          underlineColorAndroid="transparent"
+          underlineColor="transparent"
           autoCapitalize="none"
           onChangeText={this.handlePassword}
         />
