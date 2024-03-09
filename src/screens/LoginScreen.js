@@ -62,7 +62,10 @@ export class LoginScreen extends React.Component {
         </Text>
 
         <Inputs />
-        <TouchableOpacity style={styles.containerOfHelpWithAuthorization}>
+        <TouchableOpacity
+          onPress={() => alert("Forgot Password clicked")}
+          style={styles.containerOfHelpWithAuthorization}
+        >
           <Text style={styles.helpWithAuthorization}>Forgot Password?</Text>
         </TouchableOpacity>
 

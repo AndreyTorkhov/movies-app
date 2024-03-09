@@ -1,4 +1,5 @@
 import * as React from "react";
+import "./ignoreWarnings.js";
 // import { Image, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -8,57 +9,33 @@ import { LoginScreen } from "./src/screens/LoginScreen";
 import { SignUpScreen } from "./src/screens/SignUpScreen";
 import { PRIMARY_DARK_COLOR, TEXT_WHITE_COLOR } from "./src/constant.js";
 
+const commonScreenOptions = {
+  headerTransparent: true,
+  headerTintColor: TEXT_WHITE_COLOR,
+  headerTitleAlign: "center",
+  headerTitleStyle: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  contentContainerStyle: {
+    backgroundColor: PRIMARY_DARK_COLOR,
+    flex: 1,
+  },
+};
+
 const Stack = createStackNavigator();
+
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Navigator screenOptions={commonScreenOptions}>
         <Stack.Screen
-          name="Sign Up"
-          component={SignUpScreen}
-          options={{
-            headerTransparent: true,
-            headerTintColor: TEXT_WHITE_COLOR,
-            headerTitleAlign: "center",
-            headerTitleStyle: {
-              fontSize: 16,
-              fontWeight: "bold",
-            },
-            contentContainerStyle: {
-              backgroundColor: PRIMARY_DARK_COLOR,
-              flex: 1,
-            },
-          }}
+          name="Home"
+          component={HomeScreen}
+          options={{ ...commonScreenOptions, headerShown: false }}
         />
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{
-            headerTransparent: true,
-            headerTintColor: TEXT_WHITE_COLOR,
-            headerTitleAlign: "center",
-            headerTitleStyle: {
-              fontSize: 16,
-              fontWeight: "bold",
-            },
-            contentContainerStyle: {
-              backgroundColor: PRIMARY_DARK_COLOR,
-              flex: 1,
-            },
-            // headerLeft: () => (
-            //   <TouchableOpacity
-            //     onPress={() => this.props.navigate("Home")}
-            //     style={{ marginLeft: 24 }}
-            //   >
-            //     <Image
-            //       source={require("./assets/icons/Back.png")}
-            //       style={{ width: 32, height: 32 }}
-            //     />
-            //   </TouchableOpacity>
-            // ),
-          }}
-        />
+        <Stack.Screen name="Sign Up" component={SignUpScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
       </Stack.Navigator>
       <StatusBar style="light" />
     </NavigationContainer>
