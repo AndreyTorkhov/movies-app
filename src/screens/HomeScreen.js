@@ -24,73 +24,71 @@ import CategorySlider from "../components/category_carousel/categorySlider.js";
 import MovieSlider from "../components/movies_slider/movie_slider.js";
 import NavigationMenu from "../components/nav_menu/navigation_menu.js";
 
-export class HomeScreen extends React.Component {
-  render() {
-    return (
-      <SafeAreaView style={styles.container}>
-        <ScrollView
-          contentContainerStyle={{
-            paddingBottom: 72, // Учитываем высоту меню
-          }}
-        >
-          <View style={styles.section_profile}>
-            <View style={styles.container_image}>
-              <Image
-                source={require("../../assets/icons/profile_test.png")}
-                style={styles.image}
-              />
-            </View>
-
-            <View style={styles.section_profile_information}>
-              <Text style={styles.section_profile_text_greetings}>
-                Hello, узкоглазый
-              </Text>
-              <Text style={styles.section_profile_text_additionally}>
-                Я люблю когда волосатые мужики обмазываются маслом
-              </Text>
-            </View>
-            <View style={styles.checkbox_сontainer}>
-              <CheckBox />
-            </View>
-          </View>
-
-          <View style={styles.searchContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                // Действия по нажатию на иконку с расширенными настройками
-              }}
-            >
-              <Image
-                source={require("../../assets/icons/search.png")}
-                style={styles.searchIcon}
-              />
-            </TouchableOpacity>
-            <TextInput
-              placeholder="Search a title.."
-              placeholderTextColor={TEXT_GREY_COLOR}
-              style={styles.input}
+export default HomeScreen = ({ navigation }) => {
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        contentContainerStyle={{
+          paddingBottom: 72, // Учитываем высоту меню
+        }}
+      >
+        <View style={styles.section_profile}>
+          <View style={styles.container_image}>
+            <Image
+              source={require("../../assets/icons/profile_test.png")}
+              style={styles.image}
             />
-            <TouchableOpacity
-              onPress={() => {
-                // Действия по нажатию на иконку с расширенными настройками
-              }}
-            >
-              <Image
-                source={require("../../assets/icons/search_setings.png")}
-                style={styles.settingsIcon}
-              />
-            </TouchableOpacity>
           </View>
 
-          <CustomSlider data={data} />
-          <CategorySlider />
-          <MovieSlider />
-        </ScrollView>
-        <NavigationMenu navigation={this.props.navigation} />
-      </SafeAreaView>
-    );
-  }
-}
+          <View style={styles.section_profile_information}>
+            <Text style={styles.section_profile_text_greetings}>
+              Hello, узкоглазый
+            </Text>
+            <Text style={styles.section_profile_text_additionally}>
+              Я люблю когда волосатые мужики обмазываются маслом
+            </Text>
+          </View>
+          <View style={styles.checkbox_сontainer}>
+            <CheckBox />
+          </View>
+        </View>
+
+        <View style={styles.searchContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              // Действия по нажатию на иконку с расширенными настройками
+            }}
+          >
+            <Image
+              source={require("../../assets/icons/search.png")}
+              style={styles.searchIcon}
+            />
+          </TouchableOpacity>
+          <TextInput
+            placeholder="Search a title.."
+            placeholderTextColor={TEXT_GREY_COLOR}
+            style={styles.input}
+          />
+          <TouchableOpacity
+            onPress={() => {
+              // Действия по нажатию на иконку с расширенными настройками
+            }}
+          >
+            <Image
+              source={require("../../assets/icons/search_setings.png")}
+              style={styles.settingsIcon}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <CustomSlider data={data} />
+        <CategorySlider />
+        <MovieSlider />
+      </ScrollView>
+      <NavigationMenu navigation={navigation} />
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
