@@ -2,6 +2,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {myColors} from '../utils/Theme';
 import Splash from '../screens/Splash/Splash';
+import Info from '../screens/InfoAboutFilm/Info';
 import Home from '../screens/Home/Home';
 import AuthStack from './AuthStack';
 
@@ -10,7 +11,12 @@ const Stack = createNativeStackNavigator();
 const AppStack = () => {
   return (
     <Stack.Navigator screenOptions={commonScreenOptions}>
-      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen
+        name="Home"
+        component={Home}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen name="Info" component={Info} />
       <Stack.Screen name="AuthStack" component={AuthStack} />
     </Stack.Navigator>
   );

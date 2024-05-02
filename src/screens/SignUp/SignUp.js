@@ -27,12 +27,8 @@ const SignUp = ({navigation}) => {
       return;
     }
 
-    try {
-      await register(email, password);
-      navigation.navigate('Home');
-    } catch (error) {
-      alert(error.message);
-    }
+    await register(email, password);
+    navigation.navigate(('AppStack', {screen: 'Home'}));
   };
 
   const keyboardDidShow = () => {

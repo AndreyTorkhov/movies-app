@@ -19,16 +19,12 @@ const Login = ({navigation}) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   const handleLogin = async () => {
-    try {
-      if (!email || !password) {
-        alert('Пожалуйста, заполните все поля');
-        return;
-      }
-      await login(email, password);
-      navigation.navigate('Home');
-    } catch (error) {
-      console.error('Navigation error:', error.message);
+    if (!email || !password) {
+      alert('Пожалуйста, заполните все поля');
+      return;
     }
+    await login(email, password);
+    navigation.navigate(('AppStack', {screen: 'Home'}));
   };
 
   useEffect(() => {
@@ -89,7 +85,6 @@ const Login = ({navigation}) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.buttonOnLoginScreen}
-        // onPress={() => navigation.navigate('Home')}
         onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>

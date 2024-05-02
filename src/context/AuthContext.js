@@ -21,7 +21,7 @@ export const AuthProvider = ({children}) => {
       })
       .then(response => {
         let userInfo = response.data;
-        const {accessToken} = userInfo; // Получаем accessToken из userInfo
+        const {accessToken} = userInfo;
         if (accessToken) {
           setUserInfo(userInfo);
           setUserToken(accessToken);
@@ -30,7 +30,7 @@ export const AuthProvider = ({children}) => {
           AsyncStorage.setItem('userToken', accessToken);
 
           console.log(response.data);
-          console.log('UserToken' + accessToken);
+          console.log('UserToken: ' + accessToken);
         } else {
           console.error('Access token not found in response');
           throw new Error('Access token not found in response');
