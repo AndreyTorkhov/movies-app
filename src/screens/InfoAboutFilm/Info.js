@@ -9,10 +9,13 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from 'react-native';
+
 import React from 'react';
 import {myColors} from '../../utils/Theme';
 import {CheckBox} from '../../component/CheckBox/CheckBox';
 import Feather from 'react-native-vector-icons/Feather';
+import StoryLine from '../../component/StoryLineBlock/StoryLine';
+import CastAndCrew from '../../component/CastAndCrewBlock/CastAndCrew';
 
 const movies = [
   {
@@ -20,6 +23,34 @@ const movies = [
     genre: 'Action',
     image: {uri: 'https://source.unsplash.com/1024x768/?nature'},
     rating: 8.7,
+  },
+];
+
+const castAndCrewData = [
+  {
+    name: 'Actor 1',
+    role: 'Role 1',
+    image: 'https://source.unsplash.com/40x40/?men',
+  },
+  {
+    name: 'Actor 2',
+    role: 'Role 2',
+    image: 'https://source.unsplash.com/40x40/?women',
+  },
+  {
+    name: 'Actor 3',
+    role: 'Role 3',
+    image: 'https://source.unsplash.com/40x40/?dog',
+  },
+  {
+    name: 'Actor 4',
+    role: 'Role 4',
+    image: 'https://source.unsplash.com/40x40/?cat',
+  },
+  {
+    name: 'Actor 5',
+    role: 'Role 5',
+    image: 'https://source.unsplash.com/40x40/?mouse',
   },
 ];
 
@@ -111,6 +142,18 @@ const Info = ({navigation}) => {
           </View>
         </ImageBackground>
       </View>
+
+      <StoryLine title="Story Line" initialLines={4}>
+        For the first time in the cinematic history of Spider-Man, our friendly
+        neighborhood hero's identity is revealed, bringing his Super Hero
+        responsibilities into conflict with his normal life and putting those he
+        cares about most at risk. For the first time in the cinematic history of
+        Spider-Man, our friendly neighborhood hero's identity is revealed,
+        bringing his Super Hero responsibilities into conflict with his normal
+        life and putting those he cares about most at risk.
+      </StoryLine>
+
+      <CastAndCrew data={castAndCrewData} />
     </ScrollView>
   );
 };

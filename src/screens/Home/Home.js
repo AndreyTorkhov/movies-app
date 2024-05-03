@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  Keyboard,
 } from 'react-native';
 import {SliderBox} from 'react-native-image-slider-box';
 import {AuthContext} from '../../context/AuthContext';
@@ -24,6 +25,28 @@ const Home = ({navigation}) => {
   ]);
 
   const {logout} = useContext(AuthContext);
+
+  const [searchVisible, setSearchVisible] = useState(true);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setSearchVisible(false);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setSearchVisible(true);
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -67,26 +90,29 @@ const Home = ({navigation}) => {
         </TouchableOpacity>
       </View>
 
-      <SliderBox
-        images={images}
-        sliderBoxHeight={155}
-        resizeMethod="resize"
-        resizeMode="cover"
-        dotColor={myColors.PRIMARY_BLUE_ACCENT_COLOR}
-        inactiveDotColor="rgba(18, 205, 217, 0.5)"
-        dotStyle={styles.dotStyle}
-        paginationBoxStyle={styles.paginationBoxStyle}
-        circleLoop
-        ImageComponentStyle={styles.imageComponentStyle}
-        imageLoadingColor={myColors.PRIMARY_BLUE_ACCENT_COLOR}
-      />
+      {searchVisible && (
+        <SliderBox
+          images={images}
+          sliderBoxHeight={155}
+          resizeMethod="resize"
+          resizeMode="cover"
+          dotColor={myColors.PRIMARY_BLUE_ACCENT_COLOR}
+          inactiveDotColor="rgba(18, 205, 217, 0.5)"
+          dotStyle={styles.dotStyle}
+          paginationBoxStyle={styles.paginationBoxStyle}
+          circleLoop
+          ImageComponentStyle={styles.imageComponentStyle}
+          imageLoadingColor={myColors.PRIMARY_BLUE_ACCENT_COLOR}
+        />
+      )}
 
-      <CategorySlider />
-      <MovieSlider />
-
-      <TouchableOpacity onPress={() => logout()} style={styles.signOutButton}>
-        <Text style={styles.signOutButtonText}>Sign Out</Text>
-      </TouchableOpacity>
+      {searchVisible && <CategorySlider />}
+      {searchVisible && <MovieSlider />}
+      {searchVisible && (
+        <TouchableOpacity onPress={() => logout()} style={styles.signOutButton}>
+          <Text style={styles.signOutButtonText}>Sign Out</Text>
+        </TouchableOpacity>
+      )}
     </ScrollView>
   );
 };
