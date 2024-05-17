@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {SliderBox} from 'react-native-image-slider-box';
 import {AuthContext} from '../../context/AuthContext';
+import {useApi} from '../../api';
 import {myColors} from '../../utils/Theme';
 import {CheckBox} from '../../component/CheckBox/CheckBox';
 import Feather from 'react-native-vector-icons/Feather';
@@ -25,8 +26,23 @@ const Home = ({navigation}) => {
   ]);
 
   const {logout} = useContext(AuthContext);
+  const {getMovies} = useApi();
 
+  const [movies, setMovies] = useState([]);
   const [searchVisible, setSearchVisible] = useState(true);
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const moviesData = await getMovies();
+        setMovies(moviesData);
+      } catch (error) {
+        console.error('Failed to fetch movies:', error);
+      }
+    };
+
+    fetchMovies();
+  }, []);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -107,7 +123,7 @@ const Home = ({navigation}) => {
       )}
 
       {searchVisible && <CategorySlider />}
-      {searchVisible && <MovieSlider />}
+      {searchVisible && <MovieSlider movies={movies} />}
       {searchVisible && (
         <TouchableOpacity onPress={() => logout()} style={styles.signOutButton}>
           <Text style={styles.signOutButtonText}>Sign Out</Text>

@@ -8,35 +8,17 @@ import {
   StyleSheet,
 } from 'react-native';
 import {myColors} from '../../utils/Theme.js';
-import {useNavigation} from '@react-navigation/native'; // импорт
+import {useNavigation} from '@react-navigation/native';
 
-const movies = [
-  {
-    title: 'Nature',
-    genre: 'Action',
-    image: {uri: 'https://source.unsplash.com/1024x768/?nature'},
-    rating: 8.7,
-  },
-  {
-    title: 'Summer',
-    genre: 'Action',
-    image: {uri: 'https://source.unsplash.com/1024x768/?summer'},
-    rating: 10.0,
-  },
-  {
-    title: 'Winter',
-    genre: 'Action',
-    image: {uri: 'https://source.unsplash.com/1024x768/?winter'},
-    rating: 5.2,
-  },
-];
+export default function MovieSlider(movies) {
+  const navigation = useNavigation();
 
-export default function MovieSlider() {
-  const navigation = useNavigation(); // получение функции навигации
+  console.log(movies.movies);
 
-  const handleMoviePress = () => {
-    navigation.navigate('Info'); // переход на экран "Info"
+  const handleMoviePress = movie => {
+    navigation.navigate('Info', {movie});
   };
+  //navigation.navigate('Info', { id: itemId, name: itemName });
 
   return (
     <View style={styles.container}>
@@ -49,16 +31,19 @@ export default function MovieSlider() {
         </TouchableOpacity>
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {movies.map((movie, index) => (
+        {movies.movies.map(movie => (
           <TouchableOpacity
-            key={index}
+            key={movie.id}
             style={styles.card}
-            onPress={handleMoviePress}>
-            <Image source={movie.image} style={styles.image} />
+            onPress={() => handleMoviePress(movie)}>
+            <Image
+              source={{uri: `http://10.0.2.2:7000/${movie.img}`}}
+              style={styles.image}
+            />
             <View style={styles.overlay}>
-              <Text style={styles.title}>{truncate(movie.title, 15)}</Text>
+              <Text style={styles.title}>{truncate(movie.name, 15)}</Text>
               <Text style={styles.genre}>{movie.genre}</Text>
-              <Text style={styles.rating}>{movie.rating}</Text>
+              <Text style={styles.rating}>{movie.estimations}</Text>
             </View>
           </TouchableOpacity>
         ))}

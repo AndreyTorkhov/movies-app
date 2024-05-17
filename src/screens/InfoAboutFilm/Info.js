@@ -11,20 +11,21 @@ import {
 } from 'react-native';
 
 import React from 'react';
+import {useRoute} from '@react-navigation/native';
 import {myColors} from '../../utils/Theme';
 import {CheckBox} from '../../component/CheckBox/CheckBox';
 import Feather from 'react-native-vector-icons/Feather';
 import StoryLine from '../../component/StoryLineBlock/StoryLine';
 import CastAndCrew from '../../component/CastAndCrewBlock/CastAndCrew';
 
-const movies = [
-  {
-    title: 'Nature',
-    genre: 'Action',
-    image: {uri: 'https://source.unsplash.com/1024x768/?nature'},
-    rating: 8.7,
-  },
-];
+// const movies = [
+//   {
+//     title: 'Nature',
+//     genre: 'Action',
+//     image: {uri: 'https://source.unsplash.com/1024x768/?nature'},
+//     rating: 8.7,
+//   },
+// ];
 
 const castAndCrewData = [
   {
@@ -55,18 +56,26 @@ const castAndCrewData = [
 ];
 
 const Info = ({navigation}) => {
+  const route = useRoute();
+  const {movie} = route.params;
+
+  console.log('вот че попало в info:');
+  console.log(movie);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.imageContainer}>
         <ImageBackground
-          source={movies[0].image}
+          source={{uri: movie.img}}
           style={styles.imageBackground}
           opacity={0.1}>
           <View style={styles.checkboxContainer}>
             <CheckBox />
           </View>
 
-          <Image source={movies[0].image} style={styles.image}></Image>
+          <Image
+            source={{uri: `http://10.0.2.2:7000/${movie.img}`}}
+            style={styles.image}></Image>
 
           <View style={styles.description}>
             <View style={styles.data}>
