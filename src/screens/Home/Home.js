@@ -20,9 +20,9 @@ import MovieSlider from '../../component/MainMovieCardsSlider/MovieSlider';
 
 const Home = ({navigation}) => {
   const [images] = useState([
-    'https://source.unsplash.com/1024x768/?nature',
-    'https://source.unsplash.com/1024x768/?water',
-    'https://source.unsplash.com/1024x768/?girl',
+    'https://source.unsplash.com/1024x768/?ryan_gosling',
+    'https://source.unsplash.com/1024x768/?films',
+    'https://source.unsplash.com/1024x768/?new_film',
   ]);
 
   const {logout} = useContext(AuthContext);
@@ -68,17 +68,19 @@ const Home = ({navigation}) => {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.section_profile}>
         <View style={styles.container_image}>
-          <Image
-            source={{uri: 'https://source.unsplash.com/1024x768/?men'}}
-            style={styles.image}
+          <Feather
+            name="user"
+            size={24}
+            color={myColors.TEXT_LINE_DARK_COLOR}
+            style={styles.user}
           />
         </View>
         <View style={styles.section_profile_information}>
           <Text style={styles.section_profile_text_greetings}>
-            Hello, узкоглазый
+            Hello, dear user
           </Text>
           <Text style={styles.section_profile_text_additionally}>
-            Я люблю когда волосатые мужики обмазываются маслом
+            We wish you happy viewing!
           </Text>
         </View>
         <View style={styles.checkbox_сontainer}>
@@ -192,13 +194,10 @@ const styles = StyleSheet.create({
     height: 40,
     marginRight: 16,
     borderRadius: 50,
-    backgroundColor: myColors.TEXT_WHITE_COLOR,
   },
-  image: {
-    width: 40,
-    height: 40,
+  user: {
+    marginTop: 8,
     marginRight: 16,
-    borderRadius: 50,
   },
   section_profile_text_greetings: {
     color: myColors.TEXT_WHITE_COLOR,

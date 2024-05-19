@@ -59,6 +59,10 @@ const Info = ({navigation}) => {
   const route = useRoute();
   const {movie} = route.params;
 
+  const handlePlayerPress = movie => {
+    navigation.navigate('VideoPlayer', {movie});
+  };
+
   console.log('вот че попало в info:');
   console.log(movie);
 
@@ -84,7 +88,9 @@ const Info = ({navigation}) => {
                 size={16}
                 color={myColors.TEXT_GREY_COLOR}
               />
-              <Text style={styles.descriptionText}>2021</Text>
+              <Text style={styles.descriptionText}>
+                {movie.year_of_creation.substr(0, 4)}
+              </Text>
             </View>
 
             <View style={styles.duration}>
@@ -93,12 +99,15 @@ const Info = ({navigation}) => {
                 size={16}
                 color={myColors.TEXT_GREY_COLOR}
               />
-              <Text style={styles.descriptionText}>148 minutes</Text>
+              <Text
+                style={
+                  styles.descriptionText
+                }>{`${movie.duration} minutes`}</Text>
             </View>
 
             <View style={styles.genre}>
               <Feather name="film" size={16} color={myColors.TEXT_GREY_COLOR} />
-              <Text style={styles.descriptionText}>Action</Text>
+              <Text style={styles.descriptionText}>{`${movie.genre}`}</Text>
             </View>
           </View>
 
@@ -108,15 +117,13 @@ const Info = ({navigation}) => {
               size={16}
               color={myColors.PRIMARY_OREANGE_COLOR}
             />
-            <Text style={styles.estimationNum}>4.5</Text>
+            <Text style={styles.estimationNum}>{`${movie.estimations}`}</Text>
           </View>
 
           <View style={styles.infoBtnContainer}>
             <TouchableOpacity
               style={styles.infoBtnPlay}
-              onPress={() => {
-                alert('Обязательно запустится!');
-              }}>
+              onPress={() => handlePlayerPress(movie)}>
               <Feather
                 name="play"
                 size={16}

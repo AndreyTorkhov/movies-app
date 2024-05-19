@@ -13,7 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 export default function MovieSlider(movies) {
   const navigation = useNavigation();
 
-  console.log(movies.movies);
+  // console.log(movies.movies);
 
   const handleMoviePress = movie => {
     navigation.navigate('Info', {movie});

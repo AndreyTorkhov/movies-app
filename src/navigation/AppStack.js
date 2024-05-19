@@ -4,6 +4,7 @@ import {myColors} from '../utils/Theme';
 import Splash from '../screens/Splash/Splash';
 import Info from '../screens/InfoAboutFilm/Info';
 import Home from '../screens/Home/Home';
+import VideoPlayerModal from '../screens/VideoPlayerModel/VideoPlayerModal';
 import AuthStack from './AuthStack';
 
 const Stack = createNativeStackNavigator();
@@ -19,6 +20,7 @@ const AppStack = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen name="Info" component={Info} />
+      <Stack.Screen name="VideoPlayer" component={VideoPlayerModal} />
       <Stack.Screen name="AuthStack" component={AuthStack} />
     </Stack.Navigator>
   );
