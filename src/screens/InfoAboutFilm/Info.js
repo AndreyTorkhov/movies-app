@@ -18,15 +18,6 @@ import Feather from 'react-native-vector-icons/Feather';
 import StoryLine from '../../component/StoryLineBlock/StoryLine';
 import CastAndCrew from '../../component/CastAndCrewBlock/CastAndCrew';
 
-// const movies = [
-//   {
-//     title: 'Nature',
-//     genre: 'Action',
-//     image: {uri: 'https://source.unsplash.com/1024x768/?nature'},
-//     rating: 8.7,
-//   },
-// ];
-
 const castAndCrewData = [
   {
     name: 'Actor 1',
@@ -62,9 +53,6 @@ const Info = ({navigation}) => {
   const handlePlayerPress = movie => {
     navigation.navigate('VideoPlayer', {movie});
   };
-
-  console.log('вот че попало в info:');
-  console.log(movie);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

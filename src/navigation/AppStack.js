@@ -6,6 +6,8 @@ import Info from '../screens/InfoAboutFilm/Info';
 import Home from '../screens/Home/Home';
 import VideoPlayerModal from '../screens/VideoPlayerModel/VideoPlayerModal';
 import AuthStack from './AuthStack';
+import Estimated from '../screens/Estimated/Estimated';
+import Search from '../screens/Search/Search';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +23,16 @@ const AppStack = () => {
       />
       <Stack.Screen name="Info" component={Info} />
       <Stack.Screen name="VideoPlayer" component={VideoPlayerModal} />
+      <Stack.Screen
+        name="Estimated"
+        component={Estimated}
+        options={{headerBackVisible: false}}
+      />
+      <Stack.Screen
+        name="Search"
+        component={Search}
+        options={{headerShown: false}}
+      />
       <Stack.Screen name="AuthStack" component={AuthStack} />
     </Stack.Navigator>
   );

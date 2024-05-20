@@ -1,22 +1,12 @@
-import React, {useContext, useState, useEffect} from 'react';
-import {
-  StyleSheet,
-  Text,
-  ScrollView,
-  View,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  Keyboard,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, Text, ScrollView, View, SafeAreaView} from 'react-native';
 import {SliderBox} from 'react-native-image-slider-box';
-import {AuthContext} from '../../context/AuthContext';
 import {useApi} from '../../api';
 import {myColors} from '../../utils/Theme';
 import {CheckBox} from '../../component/CheckBox/CheckBox';
 import Feather from 'react-native-vector-icons/Feather';
-import CategorySlider from '../../component/CategorySlider/CategorySlider';
 import MovieSlider from '../../component/MainMovieCardsSlider/MovieSlider';
+import BottomNavigation from '../../component/BottomNavigation/BottomNavigation';
 
 const Home = ({navigation}) => {
   const [images] = useState([
@@ -25,11 +15,8 @@ const Home = ({navigation}) => {
     'https://source.unsplash.com/1024x768/?new_film',
   ]);
 
-  const {logout} = useContext(AuthContext);
   const {getMovies} = useApi();
-
   const [movies, setMovies] = useState([]);
-  const [searchVisible, setSearchVisible] = useState(true);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -44,76 +31,34 @@ const Home = ({navigation}) => {
     fetchMovies();
   }, []);
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setSearchVisible(false);
-      },
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setSearchVisible(true);
-      },
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.section_profile}>
-        <View style={styles.container_image}>
-          <Feather
-            name="user"
-            size={24}
-            color={myColors.TEXT_LINE_DARK_COLOR}
-            style={styles.user}
-          />
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.section_profile}>
+          <View style={styles.container_image}>
+            <Feather
+              name="user"
+              size={24}
+              color={myColors.TEXT_LINE_DARK_COLOR}
+              style={styles.user}
+            />
+          </View>
+          <View style={styles.section_profile_information}>
+            <Text style={styles.section_profile_text_greetings}>
+              Hello, dear user
+            </Text>
+            <Text style={styles.section_profile_text_additionally}>
+              We wish you happy viewing!
+            </Text>
+          </View>
+          <View style={styles.checkbox_сontainer}>
+            <CheckBox />
+          </View>
         </View>
-        <View style={styles.section_profile_information}>
-          <Text style={styles.section_profile_text_greetings}>
-            Hello, dear user
-          </Text>
-          <Text style={styles.section_profile_text_additionally}>
-            We wish you happy viewing!
-          </Text>
-        </View>
-        <View style={styles.checkbox_сontainer}>
-          <CheckBox />
-        </View>
-      </View>
 
-      <View style={styles.searchContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            alert('поиск не работает');
-          }}>
-          <Feather name="search" size={16} color={myColors.TEXT_GREY_COLOR} />
-        </TouchableOpacity>
-        <TextInput
-          placeholder="Search a title.."
-          placeholderTextColor={myColors.TEXT_GREY_COLOR}
-          style={styles.input}
-        />
-        <TouchableOpacity
-          onPress={() => {
-            alert('настройки не работают');
-          }}>
-          <Feather name="settings" size={16} color={myColors.TEXT_GREY_COLOR} />
-        </TouchableOpacity>
-      </View>
-
-      {searchVisible && (
         <SliderBox
           images={images}
           sliderBoxHeight={155}
-          resizeMethod="resize"
-          resizeMode="cover"
           dotColor={myColors.PRIMARY_BLUE_ACCENT_COLOR}
           inactiveDotColor="rgba(18, 205, 217, 0.5)"
           dotStyle={styles.dotStyle}
@@ -122,39 +67,26 @@ const Home = ({navigation}) => {
           ImageComponentStyle={styles.imageComponentStyle}
           imageLoadingColor={myColors.PRIMARY_BLUE_ACCENT_COLOR}
         />
-      )}
 
-      {searchVisible && <CategorySlider />}
-      {searchVisible && <MovieSlider movies={movies} />}
-      {searchVisible && (
-        <TouchableOpacity onPress={() => logout()} style={styles.signOutButton}>
-          <Text style={styles.signOutButtonText}>Sign Out</Text>
-        </TouchableOpacity>
-      )}
-    </ScrollView>
+        <View style={styles.recommendConteiner}>
+          <MovieSlider movies={movies} title={'Recommend for you'} />
+        </View>
+        <View style={styles.allConteiner}>
+          <MovieSlider movies={movies} title={'All movies'} />
+        </View>
+      </ScrollView>
+      <BottomNavigation />
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flexDirection: 'column',
     backgroundColor: myColors.PRIMARY_DARK_COLOR,
     alignItems: 'center',
     alignSelf: 'flex-start',
-    paddingBottom: 12,
-  },
-  signOutButton: {
-    position: 'absolute',
-    top: 750,
-    marginTop: 20,
-    marginBottom: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    backgroundColor: myColors.PRIMARY_BLUE_ACCENT_COLOR,
-  },
-  signOutButtonText: {
-    color: myColors.TEXT_WHITE_COLOR,
+    paddingBottom: 120,
   },
   dotStyle: {
     width: 12,
@@ -163,7 +95,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   paginationBoxStyle: {
-    position: 'absolute',
     padding: 0,
     top: -480,
     flexDirection: 'row',
@@ -207,21 +138,17 @@ const styles = StyleSheet.create({
     color: myColors.TEXT_GREY_COLOR,
     fontSize: 12,
   },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 24,
-    paddingHorizontal: 10,
-    marginLeft: 24,
-    marginRight: 24,
-    marginBottom: 24,
-    backgroundColor: myColors.PRIMARY_SOFT_COLOR,
-  },
   input: {
     flex: 1,
     height: 40,
     paddingLeft: 5,
     color: myColors.TEXT_WHITE_COLOR,
+  },
+  recommendConteiner: {
+    top: 10,
+  },
+  allConteiner: {
+    top: -520,
   },
 });
 

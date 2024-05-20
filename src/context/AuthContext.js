@@ -57,7 +57,6 @@ export const AuthProvider = ({children}) => {
           },
         },
       );
-      console.log('Server Response:', response.data);
       const {accessToken} = response.data;
       if (accessToken) {
         setUserToken(accessToken);

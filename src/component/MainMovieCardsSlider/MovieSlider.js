@@ -10,28 +10,20 @@ import {
 import {myColors} from '../../utils/Theme.js';
 import {useNavigation} from '@react-navigation/native';
 
-export default function MovieSlider(movies) {
+export default function MovieSlider({movies, title}) {
   const navigation = useNavigation();
-
-  // console.log(movies.movies);
 
   const handleMoviePress = movie => {
     navigation.navigate('Info', {movie});
   };
-  //navigation.navigate('Info', { id: itemId, name: itemName });
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Most Popular</Text>
-        <TouchableOpacity
-          onPress={() => alert('что тебе еще там надо?')}
-          style={styles.seeAllButton}>
-          <Text style={styles.seeAllButtonText}>See all</Text>
-        </TouchableOpacity>
+        <Text style={styles.headerText}>{title}</Text>
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {movies.movies.map(movie => (
+        {movies.map(movie => (
           <TouchableOpacity
             key={movie.id}
             style={styles.card}
@@ -72,12 +64,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: myColors.TEXT_WHITE_COLOR,
-  },
-  seeAllButton: {
-    padding: 8,
-  },
-  seeAllButtonText: {
-    color: myColors.PRIMARY_BLUE_ACCENT_COLOR,
   },
   card: {
     width: 135,

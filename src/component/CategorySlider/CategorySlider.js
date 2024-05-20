@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   ScrollView,
   View,
@@ -8,39 +8,27 @@ import {
 } from 'react-native';
 import {myColors} from '../../utils/Theme';
 
-const categories = ['All', 'Porn', 'Comedy', 'Documentary', 'Horror', 'Drama'];
+const categories = ['All', 'Romance', 'Comedy', 'Thriller', 'Crime', 'Drama'];
 
-export default function CategorySlider() {
-  const [selectedCategories, setSelectedCategories] = useState([]);
-
-  const handleCategoryPress = category => {
-    const isSelected = selectedCategories.includes(category);
-    let updatedCategories = [];
-    if (isSelected) {
-      updatedCategories = selectedCategories.filter(cat => cat !== category);
-    } else {
-      updatedCategories = [...selectedCategories, category];
-    }
-    setSelectedCategories(updatedCategories);
-  };
-
+export default function CategorySlider({selectedCategory, onCategoryPress}) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Categories</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContainer}>
         {categories.map(category => (
           <TouchableOpacity
             key={category}
             style={[
               styles.categoryButton,
-              selectedCategories.includes(category) &&
-                styles.selectedCategoryButton,
+              selectedCategory === category && styles.selectedCategoryButton,
             ]}
-            onPress={() => handleCategoryPress(category)}>
+            onPress={() => onCategoryPress(category)}>
             <Text
               style={[
                 styles.categoryText,
-                selectedCategories.includes(category) && {
+                selectedCategory === category && {
                   color: myColors.PRIMARY_BLUE_ACCENT_COLOR,
                 },
               ]}>
@@ -55,15 +43,13 @@ export default function CategorySlider() {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 10,
+    marginBottom: 16,
     width: '100%',
-    top: -650,
   },
   title: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 15,
-    marginLeft: 24,
     color: myColors.TEXT_WHITE_COLOR,
   },
   categoryButton: {
