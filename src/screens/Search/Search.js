@@ -48,19 +48,6 @@ const SearchScreen = () => {
     setSearchQuery(text);
   };
 
-  // const handleCategoryPress = category => {
-  //   setSelectedCategory(category);
-
-  //   if (category === 'All') {
-  //     setFilteredMovies(movies);
-  //   } else {
-  //     const filtered = movies.filter(
-  //       movie => movie.genre.toLowerCase() === category.toLowerCase(),
-  //     );
-  //     setFilteredMovies(filtered);
-  //   }
-  // };
-
   const filterMovies = () => {
     let filtered = movies;
 
@@ -91,7 +78,6 @@ const SearchScreen = () => {
           />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search..."
             value={searchQuery}
             onChangeText={handleSearchChange}
           />

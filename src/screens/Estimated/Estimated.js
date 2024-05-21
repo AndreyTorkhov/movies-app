@@ -1,18 +1,43 @@
-import {StyleSheet, Text, View, SafeAreaView, Image} from 'react-native';
-import React, {useEffect} from 'react';
-import {myColors} from '../../utils/Theme';
+import React from 'react';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  Image,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
+import {useMovieRatings} from '../../context/RatingContext';
 import BottomNavigation from '../../component/BottomNavigation/BottomNavigation';
+import {myColors} from '../../utils/Theme';
+import MovieCard from '../../component/EstimatedMovieCards/MovieCard';
 
 const Estimated = () => {
+  const {ratings} = useMovieRatings();
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <Image
-          source={require('../../assets/icons/magic-box 1.png')}
-          style={styles.image}></Image>
-        <Text style={styles.title}>There Is No Movie Yet!</Text>
-        <Text style={styles.text}>Find your movie by title or categories</Text>
-      </View>
+      {Object.keys(ratings).length === 0 ? (
+        <>
+          <View style={styles.container}>
+            <Image
+              source={require('../../assets/icons/magic-box.png')}
+              style={styles.image}></Image>
+            <Text style={styles.title}>There Is No Movie Yet!</Text>
+            <Text style={styles.text}>
+              Find your movie by title or categories
+            </Text>
+          </View>
+        </>
+      ) : (
+        <ScrollView>
+          <View style={styles.cardsContainer}>
+            {Object.values(ratings).map(movie => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
+          </View>
+        </ScrollView>
+      )}
       <BottomNavigation />
     </SafeAreaView>
   );
@@ -42,5 +67,10 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 12,
     color: myColors.TEXT_GREY_COLOR,
+  },
+  cardsContainer: {
+    marginTop: 50,
+    width: '100%',
+    paddingHorizontal: 24,
   },
 });

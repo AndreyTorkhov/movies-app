@@ -8,33 +8,36 @@ import VideoPlayerModal from '../screens/VideoPlayerModel/VideoPlayerModal';
 import AuthStack from './AuthStack';
 import Estimated from '../screens/Estimated/Estimated';
 import Search from '../screens/Search/Search';
+import {RatingProvider} from '../context/RatingContext';
 
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
   return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={commonScreenOptions}>
-      <Stack.Screen
-        name="Home"
-        component={Home}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen name="Info" component={Info} />
-      <Stack.Screen name="VideoPlayer" component={VideoPlayerModal} />
-      <Stack.Screen
-        name="Estimated"
-        component={Estimated}
-        options={{headerBackVisible: false}}
-      />
-      <Stack.Screen
-        name="Search"
-        component={Search}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen name="AuthStack" component={AuthStack} />
-    </Stack.Navigator>
+    <RatingProvider>
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={commonScreenOptions}>
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen name="Info" component={Info} />
+        <Stack.Screen name="VideoPlayer" component={VideoPlayerModal} />
+        <Stack.Screen
+          name="Estimated"
+          component={Estimated}
+          options={{headerBackVisible: false}}
+        />
+        <Stack.Screen
+          name="Search"
+          component={Search}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen name="AuthStack" component={AuthStack} />
+      </Stack.Navigator>
+    </RatingProvider>
   );
 };
 

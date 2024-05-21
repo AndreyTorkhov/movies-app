@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-community/blur": "^4.4.0",
     "@react-native-community/checkbox": "^0.5.17",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^6.5.20",
@@ -37,7 +38,8 @@
     "react-native-screens": "~3.29.0",
     "react-native-smart-statusbar": "^1.0.24",
     "react-native-vector-icons": "^10.0.3",
-    "upgrade": "^1.1.0"
+    "upgrade": "^1.1.0",
+    "expo-blur": "~12.9.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

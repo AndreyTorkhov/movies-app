@@ -8,111 +8,70 @@ export const AuthContext = createContext();
 export const AuthProvider = ({children}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState(null);
-  const [refreshToken, setRefreshToken] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
 
-  const login = (email, password) => {
-    setIsLoading(true);
-    axios
-      .post(`${API_URL}login`, {
-        email,
-        password,
-      })
-      .then(response => {
-        let userInfo = response.data;
-        const {accessToken} = userInfo;
-        if (accessToken) {
-          setUserInfo(userInfo);
-          setUserToken(accessToken);
-
-          AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-          AsyncStorage.setItem('userToken', accessToken);
-
-          console.log(response.data);
-          console.log('UserToken: ' + accessToken);
-        } else {
-          console.error('Access token not found in response');
-          throw new Error('Access token not found in response');
-        }
-      })
-      .catch(e => {
-        console.error(`Login error ${e}`);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-  const register = async (email, password) => {
+  const login = async (email, password) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        `${API_URL}registration`,
-        {
-          email,
-          password,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-      const {accessToken} = response.data;
-      if (accessToken) {
+      const response = await axios.post(`${API_URL}/login`, {email, password});
+      const userInfo = response.data;
+      const {accessToken, refreshToken} = userInfo;
+      if (accessToken && refreshToken) {
+        setUserInfo(userInfo);
         setUserToken(accessToken);
-        AsyncStorage.setItem('userInfo', JSON.stringify(response.data));
-        AsyncStorage.setItem('userToken', accessToken);
+
+        await AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+        await AsyncStorage.setItem('userToken', accessToken);
+        await AsyncStorage.setItem('refreshToken', refreshToken);
+
         console.log(response.data);
-        console.log('UserToken' + accessToken);
-        setIsLoading(false);
-        return; // Успешная регистрация
+        console.log('UserToken: ' + accessToken);
       } else {
-        // Handle case where accessToken is missing
-        console.error('Registration error: accessToken missing');
-        throw 'Registration error: accessToken missing';
+        throw new Error('Access token or refresh token not found in response');
       }
     } catch (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        console.error(`Registration error: ${error.response.status}`);
-        throw error.response.data.error || 'Registration error';
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error('No response received from server');
-        throw 'No response received from server';
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error('Error setting up request:', error.message);
-        throw 'Error setting up request';
-      }
+      console.error(`Login error: ${error}`);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const logout = () => {
+  const register = async (email, password) => {
     setIsLoading(true);
-    setUserToken(null);
-    AsyncStorage.removeItem('userInfo');
-    AsyncStorage.removeItem('userToken');
-    setIsLoading(false);
+    try {
+      const response = await axios.post(`${API_URL}/registration`, {
+        email,
+        password,
+      });
+      const {accessToken, refreshToken} = response.data;
+      if (accessToken && refreshToken) {
+        setUserToken(accessToken);
+
+        await AsyncStorage.setItem('userInfo', JSON.stringify(response.data));
+        await AsyncStorage.setItem('userToken', accessToken);
+        await AsyncStorage.setItem('refreshToken', refreshToken);
+
+        console.log(response.data);
+        console.log('UserToken: ' + accessToken);
+      } else {
+        throw new Error(
+          'Registration error: access token or refresh token missing',
+        );
+      }
+    } catch (error) {
+      console.error(`Registration error: ${error}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const refreshAccessToken = async () => {
-    try {
-      const refreshToken = await AsyncStorage.getItem('refreshToken');
-      const response = await axios.get(`${API_URL}refresh`, {
-        headers: {Authorization: `Bearer ${refreshToken}`},
-      });
-      const {accessToken} = response.data;
-
-      AsyncStorage.setItem('userToken', accessToken);
-      setUserToken(accessToken);
-
-      console.log('Token refreshed: ', accessToken);
-    } catch (error) {
-      console.error('Refresh token error: ', error);
-    }
+  const logout = async () => {
+    setIsLoading(true);
+    setUserToken(null);
+    await AsyncStorage.removeItem('userInfo');
+    await AsyncStorage.removeItem('userToken');
+    await AsyncStorage.removeItem('refreshToken');
+    setIsLoading(false);
   };
 
   const isLoggedIn = async () => {
@@ -137,7 +96,6 @@ export const AuthProvider = ({children}) => {
       value={{
         login,
         logout,
-        refreshAccessToken,
         register,
         isLoading,
         userToken,

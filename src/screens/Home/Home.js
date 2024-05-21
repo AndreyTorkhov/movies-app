@@ -3,7 +3,6 @@ import {StyleSheet, Text, ScrollView, View, SafeAreaView} from 'react-native';
 import {SliderBox} from 'react-native-image-slider-box';
 import {useApi} from '../../api';
 import {myColors} from '../../utils/Theme';
-import {CheckBox} from '../../component/CheckBox/CheckBox';
 import Feather from 'react-native-vector-icons/Feather';
 import MovieSlider from '../../component/MainMovieCardsSlider/MovieSlider';
 import BottomNavigation from '../../component/BottomNavigation/BottomNavigation';
@@ -50,9 +49,6 @@ const Home = ({navigation}) => {
             <Text style={styles.section_profile_text_additionally}>
               We wish you happy viewing!
             </Text>
-          </View>
-          <View style={styles.checkbox_сontainer}>
-            <CheckBox />
           </View>
         </View>
 
@@ -114,12 +110,6 @@ const styles = StyleSheet.create({
   section_profile_information: {
     flex: 1,
   },
-  checkbox_сontainer: {
-    width: 32,
-    height: 32,
-    top: 8,
-    marginLeft: 40,
-  },
   container_image: {
     width: 40,
     height: 40,
@@ -145,10 +135,10 @@ const styles = StyleSheet.create({
     color: myColors.TEXT_WHITE_COLOR,
   },
   recommendConteiner: {
-    top: 10,
+    top: -640,
   },
   allConteiner: {
-    top: -520,
+    top: -1170,
   },
 });
 

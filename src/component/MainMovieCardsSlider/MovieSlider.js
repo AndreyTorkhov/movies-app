@@ -33,7 +33,7 @@ export default function MovieSlider({movies, title}) {
               style={styles.image}
             />
             <View style={styles.overlay}>
-              <Text style={styles.title}>{truncate(movie.name, 15)}</Text>
+              <Text style={styles.title}>{truncate(movie.name, 14)}</Text>
               <Text style={styles.genre}>{movie.genre}</Text>
               <Text style={styles.rating}>{movie.estimations}</Text>
             </View>
@@ -51,7 +51,6 @@ function truncate(str, maxLength) {
 const styles = StyleSheet.create({
   container: {
     marginBottom: 10,
-    top: -640,
   },
   header: {
     flexDirection: 'row',

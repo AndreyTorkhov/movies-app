@@ -2,21 +2,21 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   ScrollView,
   Image,
-  StatusBar,
   ImageBackground,
   TouchableOpacity,
 } from 'react-native';
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {myColors} from '../../utils/Theme';
-import {CheckBox} from '../../component/CheckBox/CheckBox';
 import Feather from 'react-native-vector-icons/Feather';
 import StoryLine from '../../component/StoryLineBlock/StoryLine';
 import CastAndCrew from '../../component/CastAndCrewBlock/CastAndCrew';
+import EstimateModal from '../../component/EstimateModal/EstimateModal';
+import MovieSlider from '../../component/MainMovieCardsSlider/MovieSlider';
+import {useApi} from '../../api'; // после добавления похожих не понадобится
 
 const castAndCrewData = [
   {
@@ -50,6 +50,26 @@ const Info = ({navigation}) => {
   const route = useRoute();
   const {movie} = route.params;
 
+  // временно для слайдера
+  const {getMovies} = useApi();
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const moviesData = await getMovies();
+        setMovies(moviesData);
+      } catch (error) {
+        console.error('Failed to fetch movies:', error);
+      }
+    };
+
+    fetchMovies();
+  }, []);
+
+  // а это уже надо
+  const [modalVisible, setModalVisible] = useState(false);
+
   const handlePlayerPress = movie => {
     navigation.navigate('VideoPlayer', {movie});
   };
@@ -61,10 +81,6 @@ const Info = ({navigation}) => {
           source={{uri: movie.img}}
           style={styles.imageBackground}
           opacity={0.1}>
-          <View style={styles.checkboxContainer}>
-            <CheckBox />
-          </View>
-
           <Image
             source={{uri: `http://10.0.2.2:7000/${movie.img}`}}
             style={styles.image}></Image>
@@ -121,27 +137,14 @@ const Info = ({navigation}) => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.infoBtnDownload}
-              onPress={() => {
-                alert('Обязательно запустится!');
-              }}>
+              style={styles.infoBtnEstimations}
+              onPress={() => setModalVisible(true)}>
               <Feather
-                name="download"
+                name="star"
                 size={16}
-                color={myColors.PRIMARY_OREANGE_COLOR}
+                color={myColors.TEXT_WHITE_COLOR}
               />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.infoBtnShare}
-              onPress={() => {
-                alert('Обязательно запустится!');
-              }}>
-              <Feather
-                name="share"
-                size={16}
-                color={myColors.PRIMARY_BLUE_ACCENT_COLOR}
-              />
+              <Text style={styles.infoBtnEstimationsText}>Estimate</Text>
             </TouchableOpacity>
           </View>
         </ImageBackground>
@@ -158,6 +161,16 @@ const Info = ({navigation}) => {
       </StoryLine>
 
       <CastAndCrew data={castAndCrewData} />
+
+      <EstimateModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        movie={movie}
+      />
+
+      <View style={styles.similarConteiner}>
+        <MovieSlider movies={movies} title={'Similar'} />
+      </View>
     </ScrollView>
   );
 };
@@ -186,13 +199,6 @@ const styles = StyleSheet.create({
     width: 205,
     height: 285,
     borderRadius: 12,
-  },
-  checkboxContainer: {
-    width: 32,
-    height: 32,
-    position: 'absolute',
-    right: 24,
-    top: 16,
   },
   description: {
     height: 65,
@@ -244,22 +250,19 @@ const styles = StyleSheet.create({
     color: myColors.TEXT_WHITE_COLOR,
     lineHeight: 48,
   },
-  infoBtnDownload: {
+  infoBtnEstimations: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#252836',
     height: 48,
-    width: 48,
-    borderRadius: 90,
+    width: 115,
+    borderRadius: 32,
+    backgroundColor: myColors.PRIMARY_BLUE_ACCENT_COLOR,
+    paddingHorizontal: 20,
   },
-  infoBtnShare: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#252836',
-    height: 48,
-    width: 48,
-    borderRadius: 90,
+  infoBtnEstimationsText: {
+    color: myColors.TEXT_WHITE_COLOR,
+    lineHeight: 48,
   },
+  similarConteiner: {},
 });
