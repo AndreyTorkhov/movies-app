@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {myColors} from '../../utils/Theme';
 
+// в теории больше не нужен
 export class CheckBox extends Component {
   state = {
     isChecked: false,

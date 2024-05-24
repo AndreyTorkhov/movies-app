@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   Modal,
   View,
@@ -10,31 +10,47 @@ import {
 import {BlurView} from 'expo-blur';
 import Feather from 'react-native-vector-icons/Feather';
 import {myColors} from '../../utils/Theme';
-import {useMovieRatings} from '../../context/RatingContext';
+import {useApi} from '../../apis/Network';
+import {AuthContext} from '../../context/AuthContext';
 
 const {width, height} = Dimensions.get('window');
 
-const EstimateModal = ({visible, onClose, movie}) => {
+const EstimateModal = ({visible, onClose, movie, userInfo}) => {
+  const {postRating} = useApi();
+
   const [rating, setRating] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  const {ratings, updateRating} = useMovieRatings();
 
-  useEffect(() => {
-    if (ratings[movie.id]) {
-      setRating(ratings[movie.id].rating);
-    }
-  }, [ratings, movie]);
+  // console.log('айди проверяю у фильма:');
+  // console.log(movie.id);
+
+  // console.log('айди проверяю у юзера:');
+  // console.log(userInfo.user.id);
+
+  // console.log('рейтинг проверяю:');
+  // console.log(rating);
 
   const handleStarPress = index => {
     const newRating = index + 1;
     setRating(newRating);
-    updateRating(movie, newRating);
-    onClose();
   };
 
-  const handleCardPress = () => {
-    setIsOpen(true);
-  };
+  useEffect(() => {
+    const postRatedMovies = async () => {
+      try {
+        const ratedMoviesData = await postRating(
+          movie.id,
+          userInfo.user.id,
+          rating,
+        );
+        onClose();
+      } catch (error) {
+        console.error('Failed to fetch rated movies:', JSON.stringify(error));
+      }
+    };
+
+    postRatedMovies();
+  }, [rating]);
 
   return (
     <Modal

@@ -7,7 +7,6 @@ const api = axios.create({
   baseURL: API_URL,
 });
 
-// Request interceptor to add the authorization token to headers
 api.interceptors.request.use(
   async config => {
     const userToken = await AsyncStorage.getItem('userToken');
@@ -21,7 +20,6 @@ api.interceptors.request.use(
   },
 );
 
-// Function to refresh the access token
 const refreshAccessToken = async () => {
   try {
     const refreshToken = await AsyncStorage.getItem('refreshToken');
@@ -37,7 +35,6 @@ const refreshAccessToken = async () => {
   }
 };
 
-// Response interceptor to handle token refreshing
 api.interceptors.response.use(
   response => {
     return response;
@@ -49,6 +46,7 @@ api.interceptors.response.use(
       try {
         const newAccessToken = await refreshAccessToken();
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        console.log('Token refreshed:', newAccessToken);
         return api(originalRequest);
       } catch (refreshError) {
         console.error('Token refresh failed:', refreshError);
@@ -58,5 +56,63 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+export const useApi = () => {
+  const getMovies = async () => {
+    try {
+      const response = await api.get('/movies');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching movies:', error);
+      throw error;
+    }
+  };
+
+  const getNewMovies = async () => {
+    try {
+      const response = await api.get('/movies/new');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching new movies:', error);
+      throw error;
+    }
+  };
+
+  const getRating = async id => {
+    try {
+      const response = await api.get('/movies/rating/' + id);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching rating:', error);
+      throw error;
+    }
+  };
+
+  const getUsersRatedMovies = async id => {
+    try {
+      const response = await api.get('/user/' + id + '/rated');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching rating:', error);
+      throw error;
+    }
+  };
+
+  const postRating = async (movieId, userId, rating) => {
+    try {
+      const response = await api.post('/movies/rating', {
+        movieId,
+        userId,
+        rating,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error posting rating:', error);
+      throw error;
+    }
+  };
+
+  return {getMovies, getNewMovies, getRating, getUsersRatedMovies, postRating};
+};
 
 export default api;

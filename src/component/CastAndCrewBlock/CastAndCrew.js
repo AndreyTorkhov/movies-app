@@ -5,7 +5,7 @@ import {View, Text, ScrollView, StyleSheet, Image} from 'react-native';
 const CastAndCrew = ({data}) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Cast and Crew</Text>
+      <Text style={styles.title}>Актерский состав</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {data.map((item, index) => (
           <View key={index} style={styles.card}>

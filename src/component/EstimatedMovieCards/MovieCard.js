@@ -15,7 +15,7 @@ const MovieCard = ({movie}) => {
     <View style={styles.card}>
       <TouchableOpacity onPress={handlePress} style={styles.imageContainer}>
         <Image
-          source={{uri: `http://10.0.2.2:7000/${movie.img}`}}
+          source={{uri: `http://10.0.2.2:7000/${movie.horizontal_img}`}}
           style={styles.image}
         />
         <Feather
@@ -35,7 +35,7 @@ const MovieCard = ({movie}) => {
             size={16}
             color={myColors.PRIMARY_OREANGE_COLOR}
           />
-          <Text style={styles.ratingEstimation}>{movie.rating}</Text>
+          <Text style={styles.ratingEstimation}>{movie.estimations}</Text>
         </View>
       </View>
     </View>

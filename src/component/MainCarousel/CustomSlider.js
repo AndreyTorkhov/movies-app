@@ -1,31 +1,54 @@
-import React, {useState} from 'react';
-import {Dimensions} from 'react-native';
-import {View} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, Dimensions} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import CarouselItem from './CarouselItem.js';
-import styles from './styles.js';
-import data from './data.js';
+import CarouselItem from './CarouselItem';
+import {myColors} from '../../utils/Theme';
+import {format} from 'date-fns';
 
 const {width} = Dimensions.get('window');
-export default function CustomSlider({data}) {
+
+const formatDate = dateString => {
+  const date = new Date(dateString);
+  return format(date, 'MMMM dd, yyyy');
+};
+
+const transformData = data => {
+  return data.map(item => ({
+    title: item.name,
+    date: formatDate(item.year_of_creation),
+    source: {uri: `http://10.0.2.2:7000/${item.horizontal_img}`},
+  }));
+};
+
+const CustomSlider = ({data, userInfo}) => {
   const [activeDotIndex, setActiveDotIndex] = useState(0);
+  const [carouselData, setCarouselData] = useState([]);
+
+  // console.log('customSlider');
+  // console.log(userInfo);
+
+  useEffect(() => {
+    const transformedData = transformData(data);
+    setCarouselData(transformedData);
+  }, [data]);
+
   const settings = {
     sliderWidth: width,
     sliderHeight: width,
-    itemWidth: width - 80,
-    data: data,
-    renderItem: CarouselItem,
+    itemWidth: width * 0.75,
+    data: carouselData,
+    renderItem: ({item, index}) => (
+      <CarouselItem item={item} index={index} data={data} userInfo={userInfo} />
+    ),
     hasParallaxImages: true,
     onSnapToItem: index => setActiveDotIndex(index),
   };
-  const handleSnapToItem = index => {
-    setActiveDotIndex(index);
-  };
+
   return (
     <View style={styles.container}>
-      <Carousel {...settings} onSnapToItem={handleSnapToItem} />
+      <Carousel {...settings} />
       <View style={styles.dotsContainer}>
-        {data.map((_, index) => (
+        {carouselData.map((_, index) => (
           <View
             key={index}
             style={[
@@ -37,4 +60,31 @@ export default function CustomSlider({data}) {
       </View>
     </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {},
+  dotsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    top: -660,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
+  },
+  activeDot: {
+    width: 24,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: myColors.PRIMARY_BLUE_ACCENT_COLOR,
+  },
+  inactiveDot: {
+    backgroundColor: myColors.PRIMARY_BLUE_ACCENT_COLOR,
+    opacity: 0.3,
+  },
+});
+
+export default CustomSlider;

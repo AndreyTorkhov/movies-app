@@ -91,6 +91,9 @@ export const AuthProvider = ({children}) => {
     isLoggedIn();
   }, []);
 
+  // console.log('вот дата');
+  // console.log(userInfo);
+
   return (
     <AuthContext.Provider
       value={{
@@ -99,6 +102,7 @@ export const AuthProvider = ({children}) => {
         register,
         isLoading,
         userToken,
+        userInfo,
       }}>
       {children}
     </AuthContext.Provider>

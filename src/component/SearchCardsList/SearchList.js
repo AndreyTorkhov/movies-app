@@ -11,11 +11,15 @@ import {myColors} from '../../utils/Theme';
 import {useNavigation} from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 
-const SearchList = ({movies}) => {
+const SearchList = ({movies, userInfo}) => {
   const navigation = useNavigation();
-  const handleMoviePress = movie => {
-    navigation.navigate('Info', {movie});
+
+  const handleMoviePress = (movie, userInfo) => {
+    navigation.navigate('Info', {movie, userInfo});
   };
+
+  // console.log('SearchList');
+  // console.log(userInfo);
 
   return (
     <ScrollView contentContainerStyle={styles.cardsContainer}>
@@ -23,15 +27,17 @@ const SearchList = ({movies}) => {
         <TouchableOpacity
           key={movie.id}
           style={styles.card}
-          onPress={() => handleMoviePress(movie)}>
+          onPress={() => handleMoviePress(movie, userInfo)}>
           <View style={styles.imageContainer}>
             <Image
-              source={{uri: `http://10.0.2.2:7000/${movie.img}`}}
+              source={{uri: `http://10.0.2.2:7000/${movie.main_img}`}}
               style={styles.image}
             />
-            <View style={styles.ratingContainer}>
-              <Text style={styles.ratingText}>{movie.estimations}</Text>
-            </View>
+            {movie.estimations !== undefined && (
+              <View style={styles.ratingContainer}>
+                <Text style={styles.ratingText}>{movie.estimations}</Text>
+              </View>
+            )}
           </View>
           <View style={styles.detailsContainer}>
             <View style={styles.subStatus}>

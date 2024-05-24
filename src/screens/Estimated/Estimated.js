@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {
   SafeAreaView,
   View,
@@ -7,32 +7,74 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import {useMovieRatings} from '../../context/RatingContext';
+// import {useMovieRatings} from '../../context/RatingContext';
 import BottomNavigation from '../../component/BottomNavigation/BottomNavigation';
 import {myColors} from '../../utils/Theme';
 import MovieCard from '../../component/EstimatedMovieCards/MovieCard';
+import {useApi} from '../../apis/Network';
+import {useRoute} from '@react-navigation/native';
 
 const Estimated = () => {
-  const {ratings} = useMovieRatings();
+  const {getUsersRatedMovies, getRating} = useApi();
+  const [ratedMovies, setRatedMovies] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
+
+  const route = useRoute();
+  const params = route.params;
+
+  useEffect(() => {
+    if (params?.userInfo) {
+      setUserInfo(params.userInfo);
+    }
+  }, [params]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchRatedMovies = async () => {
+      if (!userInfo) return;
+      try {
+        const ratedMoviesData = await getUsersRatedMovies(userInfo.user.id);
+        const moviesWithRatings = await Promise.all(
+          ratedMoviesData.map(async movie => {
+            const rating = await getRating(movie.id);
+            return {...movie, estimations: rating.rating};
+          }),
+        );
+        if (isMounted) {
+          setRatedMovies(moviesWithRatings);
+        }
+      } catch (error) {
+        if (isMounted) {
+          console.error('Failed to fetch rated movies:', JSON.stringify(error));
+        }
+      }
+    };
+
+    fetchRatedMovies();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [userInfo]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {Object.keys(ratings).length === 0 ? (
-        <>
-          <View style={styles.container}>
-            <Image
-              source={require('../../assets/icons/magic-box.png')}
-              style={styles.image}></Image>
-            <Text style={styles.title}>There Is No Movie Yet!</Text>
-            <Text style={styles.text}>
-              Find your movie by title or categories
-            </Text>
-          </View>
-        </>
+      {ratedMovies.length === 0 ? (
+        <View style={styles.container}>
+          <Image
+            source={require('../../assets/icons/magic-box.png')}
+            style={styles.image}
+          />
+          <Text style={styles.title}>There Is No Movie Yet!</Text>
+          <Text style={styles.text}>
+            Find your movie by title or categories
+          </Text>
+        </View>
       ) : (
         <ScrollView>
           <View style={styles.cardsContainer}>
-            {Object.values(ratings).map(movie => (
+            {ratedMovies.map(movie => (
               <MovieCard key={movie.id} movie={movie} />
             ))}
           </View>

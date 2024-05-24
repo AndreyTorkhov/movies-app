@@ -9,12 +9,13 @@ import {
 import React, {useEffect} from 'react';
 import {myColors} from '../../utils/Theme';
 
-const Splash = ({navigation}) => {
+const Splash = ({navigation, route}) => {
   useEffect(() => {
+    const {screenName} = route.params;
     setTimeout(() => {
-      navigation.replace('Home');
-    }, 1000); //fix time
-  }, []);
+      navigation.replace(screenName);
+    }, 1000);
+  }, [navigation, route.params]);
   return (
     <View style={styles.container}>
       <StatusBar style="light" />

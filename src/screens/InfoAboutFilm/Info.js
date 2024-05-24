@@ -16,7 +16,7 @@ import StoryLine from '../../component/StoryLineBlock/StoryLine';
 import CastAndCrew from '../../component/CastAndCrewBlock/CastAndCrew';
 import EstimateModal from '../../component/EstimateModal/EstimateModal';
 import MovieSlider from '../../component/MainMovieCardsSlider/MovieSlider';
-import {useApi} from '../../api'; // после добавления похожих не понадобится
+import {useApi} from '../../apis/Network';
 
 const castAndCrewData = [
   {
@@ -48,7 +48,15 @@ const castAndCrewData = [
 
 const Info = ({navigation}) => {
   const route = useRoute();
-  const {movie} = route.params;
+  const {movie, userInfo: initialUserInfo} = route.params;
+
+  const [userInfo, setUserInfo] = useState(initialUserInfo);
+
+  useEffect(() => {
+    if (initialUserInfo) {
+      setUserInfo(initialUserInfo);
+    }
+  }, [initialUserInfo]);
 
   // временно для слайдера
   const {getMovies} = useApi();
@@ -78,11 +86,11 @@ const Info = ({navigation}) => {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.imageContainer}>
         <ImageBackground
-          source={{uri: movie.img}}
+          source={{uri: movie.main_img}}
           style={styles.imageBackground}
           opacity={0.1}>
           <Image
-            source={{uri: `http://10.0.2.2:7000/${movie.img}`}}
+            source={{uri: `http://10.0.2.2:7000/${movie.main_img}`}}
             style={styles.image}></Image>
 
           <View style={styles.description}>
@@ -121,7 +129,9 @@ const Info = ({navigation}) => {
               size={16}
               color={myColors.PRIMARY_OREANGE_COLOR}
             />
-            <Text style={styles.estimationNum}>{`${movie.estimations}`}</Text>
+            {movie.estimations !== undefined && (
+              <Text style={styles.estimationNum}>{`${movie.estimations}`}</Text>
+            )}
           </View>
 
           <View style={styles.infoBtnContainer}>
@@ -150,14 +160,8 @@ const Info = ({navigation}) => {
         </ImageBackground>
       </View>
 
-      <StoryLine title="Story Line" initialLines={4}>
-        For the first time in the cinematic history of Spider-Man, our friendly
-        neighborhood hero's identity is revealed, bringing his Super Hero
-        responsibilities into conflict with his normal life and putting those he
-        cares about most at risk. For the first time in the cinematic history of
-        Spider-Man, our friendly neighborhood hero's identity is revealed,
-        bringing his Super Hero responsibilities into conflict with his normal
-        life and putting those he cares about most at risk.
+      <StoryLine title="Сюжет" initialLines={4}>
+        {movie.descr}
       </StoryLine>
 
       <CastAndCrew data={castAndCrewData} />
@@ -166,10 +170,11 @@ const Info = ({navigation}) => {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         movie={movie}
+        userInfo={userInfo}
       />
 
       <View style={styles.similarConteiner}>
-        <MovieSlider movies={movies} title={'Similar'} />
+        <MovieSlider movies={movies} title={'Похожие фильмы'} />
       </View>
     </ScrollView>
   );

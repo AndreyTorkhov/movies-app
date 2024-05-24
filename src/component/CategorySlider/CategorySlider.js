@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ScrollView,
   View,
@@ -7,10 +7,31 @@ import {
   StyleSheet,
 } from 'react-native';
 import {myColors} from '../../utils/Theme';
-
-const categories = ['All', 'Romance', 'Comedy', 'Thriller', 'Crime', 'Drama'];
+import {useApi} from '../../apis/Network';
 
 export default function CategorySlider({selectedCategory, onCategoryPress}) {
+  const [categories, setCategories] = useState(['All']);
+  const {getMovies} = useApi();
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const movies = await getMovies();
+        const genres = movies.reduce((acc, movie) => {
+          if (movie.genre && !acc.includes(movie.genre)) {
+            acc.push(movie.genre);
+          }
+          return acc;
+        }, []);
+        setCategories(['All', ...genres]);
+      } catch (error) {
+        console.error('Error fetching genres:', error);
+      }
+    };
+
+    fetchGenres();
+  }, []);
+
   return (
     <View style={styles.container}>
       <ScrollView

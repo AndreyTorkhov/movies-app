@@ -1,27 +1,44 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {StyleSheet, Text, ScrollView, View, SafeAreaView} from 'react-native';
-import {SliderBox} from 'react-native-image-slider-box';
-import {useApi} from '../../api';
+import {useApi} from '../../apis/Network';
 import {myColors} from '../../utils/Theme';
 import Feather from 'react-native-vector-icons/Feather';
 import MovieSlider from '../../component/MainMovieCardsSlider/MovieSlider';
 import BottomNavigation from '../../component/BottomNavigation/BottomNavigation';
+import CustomSlider from '../../component/MainCarousel/CustomSlider';
+import {AuthContext} from '../../context/AuthContext';
 
 const Home = ({navigation}) => {
-  const [images] = useState([
-    'https://source.unsplash.com/1024x768/?ryan_gosling',
-    'https://source.unsplash.com/1024x768/?films',
-    'https://source.unsplash.com/1024x768/?new_film',
-  ]);
-
-  const {getMovies} = useApi();
+  const {getMovies, getNewMovies, getRating} = useApi();
+  const {userInfo} = useContext(AuthContext);
   const [movies, setMovies] = useState([]);
+  const [newMovies, setNewMovies] = useState([]);
+
+  // console.log('homePage');
+  // console.log(userInfo);
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
         const moviesData = await getMovies();
-        setMovies(moviesData);
+        const newMoviesData = await getNewMovies();
+
+        const moviesWithRatings = await Promise.all(
+          moviesData.map(async movie => {
+            const rating = await getRating(movie.id);
+            return {...movie, estimations: rating.rating};
+          }),
+        );
+
+        const newMoviesWithRatings = await Promise.all(
+          newMoviesData.map(async movie => {
+            const rating = await getRating(movie.id);
+            return {...movie, estimations: rating.rating};
+          }),
+        );
+
+        setNewMovies(newMoviesWithRatings);
+        setMovies(moviesWithRatings);
       } catch (error) {
         console.error('Failed to fetch movies:', error);
       }
@@ -52,26 +69,24 @@ const Home = ({navigation}) => {
           </View>
         </View>
 
-        <SliderBox
-          images={images}
-          sliderBoxHeight={155}
-          dotColor={myColors.PRIMARY_BLUE_ACCENT_COLOR}
-          inactiveDotColor="rgba(18, 205, 217, 0.5)"
-          dotStyle={styles.dotStyle}
-          paginationBoxStyle={styles.paginationBoxStyle}
-          circleLoop
-          ImageComponentStyle={styles.imageComponentStyle}
-          imageLoadingColor={myColors.PRIMARY_BLUE_ACCENT_COLOR}
-        />
+        <CustomSlider data={newMovies} userInfo={userInfo} />
 
         <View style={styles.recommendConteiner}>
-          <MovieSlider movies={movies} title={'Recommend for you'} />
+          <MovieSlider
+            movies={movies}
+            title={'Понравится вам'}
+            userInfo={userInfo}
+          />
         </View>
         <View style={styles.allConteiner}>
-          <MovieSlider movies={movies} title={'All movies'} />
+          <MovieSlider
+            movies={movies}
+            title={'Все фильмы'}
+            userInfo={userInfo}
+          />
         </View>
       </ScrollView>
-      <BottomNavigation />
+      <BottomNavigation userInfo={userInfo} />
     </SafeAreaView>
   );
 };
@@ -80,24 +95,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     backgroundColor: myColors.PRIMARY_DARK_COLOR,
-    alignItems: 'center',
     alignSelf: 'flex-start',
     paddingBottom: 120,
-  },
-  dotStyle: {
-    width: 12,
-    height: 12,
-    marginHorizontal: 8,
-    borderRadius: 4,
-  },
-  paginationBoxStyle: {
-    padding: 0,
-    top: -480,
-    flexDirection: 'row',
-  },
-  imageComponentStyle: {
-    width: 295,
-    borderRadius: 16,
   },
   section_profile: {
     paddingTop: 10,

@@ -10,11 +10,14 @@ import {
 import {myColors} from '../../utils/Theme.js';
 import {useNavigation} from '@react-navigation/native';
 
-export default function MovieSlider({movies, title}) {
+export default function MovieSlider({movies, title, userInfo}) {
   const navigation = useNavigation();
 
-  const handleMoviePress = movie => {
-    navigation.navigate('Info', {movie});
+  // console.log('movieSliders');
+  // console.log(userInfo);
+
+  const handleMoviePress = (movie, userInfo) => {
+    navigation.navigate('Info', {movie, userInfo});
   };
 
   return (
@@ -27,15 +30,17 @@ export default function MovieSlider({movies, title}) {
           <TouchableOpacity
             key={movie.id}
             style={styles.card}
-            onPress={() => handleMoviePress(movie)}>
+            onPress={() => handleMoviePress(movie, userInfo)}>
             <Image
-              source={{uri: `http://10.0.2.2:7000/${movie.img}`}}
+              source={{uri: `http://10.0.2.2:7000/${movie.main_img}`}}
               style={styles.image}
             />
             <View style={styles.overlay}>
               <Text style={styles.title}>{truncate(movie.name, 14)}</Text>
               <Text style={styles.genre}>{movie.genre}</Text>
-              <Text style={styles.rating}>{movie.estimations}</Text>
+              {movie.estimations !== undefined && (
+                <Text style={styles.rating}>{movie.estimations}</Text>
+              )}
             </View>
           </TouchableOpacity>
         ))}

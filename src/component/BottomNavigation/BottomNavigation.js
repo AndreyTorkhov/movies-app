@@ -5,9 +5,12 @@ import {AuthContext} from '../../context/AuthContext';
 import Feather from 'react-native-vector-icons/Feather';
 import {useNavigation} from '@react-navigation/native';
 
-const BottomNavigation = () => {
+const BottomNavigation = ({userInfo}) => {
   const {logout} = useContext(AuthContext);
   const navigation = useNavigation();
+
+  // console.log('bottomNav');
+  // console.log(userInfo);
 
   return (
     <View style={styles.container}>
@@ -23,7 +26,7 @@ const BottomNavigation = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Search')}>
+        onPress={() => navigation.navigate('Search', {userInfo})}>
         <Feather
           name="search"
           size={24}
@@ -33,7 +36,7 @@ const BottomNavigation = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Estimated')}>
+        onPress={() => navigation.navigate('Estimated', {userInfo})}>
         <Feather
           name="eye"
           size={24}

@@ -3,14 +3,14 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {myColors} from '../utils/Theme';
 import Login from '../screens/Login/Login';
 import SignUp from '../screens/SignUp/SignUp';
-import Home from '../screens/Home/Home';
+import Splash from '../screens/Splash/Splash';
 
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Login"
+      initialRouteName="Splash"
       screenOptions={{
         headerTransparent: true,
         headerTintColor: myColors.TEXT_WHITE_COLOR,
@@ -24,6 +24,12 @@ const AuthStack = () => {
           flex: 1,
         },
       }}>
+      <Stack.Screen
+        name="Splash"
+        component={Splash}
+        initialParams={{screenName: 'Login'}}
+        options={{headerShown: false}}
+      />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Sign Up" component={SignUp} />
     </Stack.Navigator>

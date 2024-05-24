@@ -8,19 +8,25 @@ import {
   Image,
   SafeAreaView,
 } from 'react-native';
+import {useRoute} from '@react-navigation/native';
 import {Feather} from 'react-native-vector-icons';
 import CategorySlider from '../../component/CategorySlider/CategorySlider';
 import BottomNavigation from '../../component/BottomNavigation/BottomNavigation';
 import {myColors} from '../../utils/Theme';
 import SearchList from '../../component/SearchCardsList/SearchList';
-import {useApi} from '../../api';
+import {useApi} from '../../apis/Network';
 
 const SearchScreen = () => {
   const {getMovies} = useApi();
+  const route = useRoute();
+  const {userInfo} = route.params;
   const [movies, setMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // console.log('Search');
+  // console.log(userInfo);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -87,10 +93,11 @@ const SearchScreen = () => {
           <CategorySlider
             selectedCategory={selectedCategory}
             onCategoryPress={handleCategoryPress}
+            userInfo={userInfo}
           />
         </View>
 
-        <SearchList movies={filteredMovies} />
+        <SearchList movies={filteredMovies} userInfo={userInfo} />
       </ScrollView>
       <BottomNavigation />
     </SafeAreaView>
