@@ -4,6 +4,7 @@ import Carousel from 'react-native-snap-carousel';
 import CarouselItem from './CarouselItem';
 import {myColors} from '../../utils/Theme';
 import {format} from 'date-fns';
+import {API_URL} from '../../config';
 
 const {width} = Dimensions.get('window');
 
@@ -16,7 +17,7 @@ const transformData = data => {
   return data.map(item => ({
     title: item.name,
     date: formatDate(item.year_of_creation),
-    source: {uri: `http://10.0.2.2:7000/${item.horizontal_img}`},
+    source: {uri: `${API_URL}${item.horizontal_img}`},
   }));
 };
 
@@ -62,12 +63,14 @@ const CustomSlider = ({data, userInfo}) => {
   );
 };
 
+export default CustomSlider;
+
 const styles = StyleSheet.create({
   container: {},
   dotsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    top: -660,
+    top: 0,
   },
   dot: {
     width: 8,
@@ -86,5 +89,3 @@ const styles = StyleSheet.create({
     opacity: 0.3,
   },
 });
-
-export default CustomSlider;

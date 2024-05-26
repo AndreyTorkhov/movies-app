@@ -17,7 +17,7 @@ import SearchList from '../../component/SearchCardsList/SearchList';
 import {useApi} from '../../apis/Network';
 
 const SearchScreen = () => {
-  const {getMovies} = useApi();
+  const {getMovies, getRating} = useApi();
   const route = useRoute();
   const {userInfo} = route.params;
   const [movies, setMovies] = useState([]);
@@ -32,8 +32,17 @@ const SearchScreen = () => {
     const fetchMovies = async () => {
       try {
         const moviesData = await getMovies();
-        setMovies(moviesData);
-        setFilteredMovies(moviesData);
+        const moviesWithRatings = await Promise.all(
+          moviesData.map(async movie => {
+            const ratingData = await getRating(movie.id);
+            return {
+              ...movie,
+              estimations: ratingData?.rating || null,
+            };
+          }),
+        );
+        setMovies(moviesWithRatings);
+        setFilteredMovies(moviesWithRatings);
       } catch (error) {
         console.error('Failed to fetch movies:', error);
       }
@@ -104,6 +113,8 @@ const SearchScreen = () => {
   );
 };
 
+export default SearchScreen;
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -135,5 +146,3 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 });
-
-export default SearchScreen;

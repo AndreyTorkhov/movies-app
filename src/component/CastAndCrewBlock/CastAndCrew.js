@@ -21,6 +21,8 @@ const CastAndCrew = ({data}) => {
   );
 };
 
+export default CastAndCrew;
+
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 24,
@@ -56,5 +58,3 @@ const styles = StyleSheet.create({
     color: myColors.TEXT_GREY_COLOR,
   },
 });
-
-export default CastAndCrew;

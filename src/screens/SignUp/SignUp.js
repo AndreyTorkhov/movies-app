@@ -21,9 +21,26 @@ const SignUp = ({navigation}) => {
 
   const {register} = useContext(AuthContext);
 
+  const validateEmail = email => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSignUp = async () => {
     if (!email || !password || !fullName) {
       alert('Please fill in all fields');
+      return;
+    }
+    if (fullName < 4 || password.length < 4) {
+      alert('Длина имени и пароля должна быть больше 4 символов');
+      return;
+    }
+    if (!validateEmail(email)) {
+      alert('Пожалуйста, введите корректный адрес электронной почты');
+      return;
+    }
+    if (!isSelected) {
+      alert('Пожалуйста, примите условия и политику конфиденциальности');
       return;
     }
 
@@ -106,7 +123,7 @@ const SignUp = ({navigation}) => {
       </View>
 
       <View style={styles.checkbox_container}>
-        <CheckBox />
+        <CheckBox value={isSelected} onValueChange={setSelection} />
         <Text style={styles.checkbox_text}>
           I agree to the
           <Text style={styles.highlighted_text}> Terms and Services </Text>

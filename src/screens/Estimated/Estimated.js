@@ -7,7 +7,6 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-// import {useMovieRatings} from '../../context/RatingContext';
 import BottomNavigation from '../../component/BottomNavigation/BottomNavigation';
 import {myColors} from '../../utils/Theme';
 import MovieCard from '../../component/EstimatedMovieCards/MovieCard';
@@ -61,7 +60,7 @@ const Estimated = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       {ratedMovies.length === 0 ? (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
           <Image
             source={require('../../assets/icons/magic-box.png')}
             style={styles.image}
@@ -70,9 +69,9 @@ const Estimated = () => {
           <Text style={styles.text}>
             Find your movie by title or categories
           </Text>
-        </View>
+        </ScrollView>
       ) : (
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.container}>
           <View style={styles.cardsContainer}>
             {ratedMovies.map(movie => (
               <MovieCard key={movie.id} movie={movie} />
@@ -96,9 +95,11 @@ const styles = StyleSheet.create({
     bottom: 80,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: '100%',
+    marginTop: 70,
+    paddingBottom: 70,
   },
   image: {
+    marginTop: 150,
     marginBottom: 16,
   },
   title: {

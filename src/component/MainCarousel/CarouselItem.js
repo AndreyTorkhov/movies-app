@@ -12,7 +12,7 @@ import {myColors} from '../../utils/Theme';
 
 const {width} = Dimensions.get('window');
 
-function CarouselItem({item, index, data, userInfo}) {
+const CarouselItem = ({item, index, data, userInfo}) => {
   const navigation = useNavigation();
 
   // console.log('carouselItem');
@@ -38,7 +38,9 @@ function CarouselItem({item, index, data, userInfo}) {
       </SafeAreaView>
     </Pressable>
   );
-}
+};
+
+export default CarouselItem;
 
 const styles = StyleSheet.create({
   item: {
@@ -77,5 +79,3 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-
-export default CarouselItem;

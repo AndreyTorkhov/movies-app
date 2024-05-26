@@ -1,8 +1,9 @@
-import React, {useRef, useState} from 'react';
-import {View, Text, Modal, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useRef} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {Video} from 'expo-av';
 import {myColors} from '../../utils/Theme';
+import {API_URL} from '../../config';
 
 const VideoPlayerModal = () => {
   const route = useRoute();
@@ -14,7 +15,7 @@ const VideoPlayerModal = () => {
       <Text style={styles.text}>{movie.name}</Text>
       <Video
         ref={videoRef}
-        source={{uri: `http://10.0.2.2:7000/${movie.video}`}}
+        source={{uri: `${API_URL}${movie.video}`}}
         style={styles.video}
         useNativeControls
         resizeMode="contain"
@@ -22,6 +23,8 @@ const VideoPlayerModal = () => {
     </View>
   );
 };
+
+export default VideoPlayerModal;
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -40,5 +43,3 @@ const styles = StyleSheet.create({
     height: '50%',
   },
 });
-
-export default VideoPlayerModal;

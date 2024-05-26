@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState} from 'react';
 import {
   Modal,
   View,
@@ -11,7 +11,6 @@ import {BlurView} from 'expo-blur';
 import Feather from 'react-native-vector-icons/Feather';
 import {myColors} from '../../utils/Theme';
 import {useApi} from '../../apis/Network';
-import {AuthContext} from '../../context/AuthContext';
 
 const {width, height} = Dimensions.get('window');
 
@@ -19,55 +18,43 @@ const EstimateModal = ({visible, onClose, movie, userInfo}) => {
   const {postRating} = useApi();
 
   const [rating, setRating] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
-
-  // console.log('айди проверяю у фильма:');
-  // console.log(movie.id);
-
-  // console.log('айди проверяю у юзера:');
-  // console.log(userInfo.user.id);
-
-  // console.log('рейтинг проверяю:');
-  // console.log(rating);
 
   const handleStarPress = index => {
     const newRating = index + 1;
     setRating(newRating);
   };
 
-  useEffect(() => {
-    const postRatedMovies = async () => {
-      try {
-        const ratedMoviesData = await postRating(
-          movie.id,
-          userInfo.user.id,
-          rating,
-        );
-        onClose();
-      } catch (error) {
-        console.error('Failed to fetch rated movies:', JSON.stringify(error));
-      }
-    };
+  // console.log('фильм:');
+  // console.log(movie.id);
+  // console.log('юзер:');
+  // console.log(userInfo.user.id);
+  // console.log('оценка:');
+  // console.log(rating);
 
-    postRatedMovies();
-  }, [rating]);
+  const handleClose = async () => {
+    if (rating >= 1 && rating <= 5) {
+      try {
+        await postRating(movie.id, userInfo.user.id, rating);
+      } catch (error) {
+        console.error('Failed to post rating:', JSON.stringify(error));
+      }
+    }
+    onClose();
+  };
 
   return (
     <Modal
       transparent
       visible={visible}
       animationType="fade"
-      onRequestClose={onClose}>
-      <TouchableOpacity
-        style={styles.container}
-        activeOpacity={1}
-        onPress={() => setIsOpen(true)}>
+      onRequestClose={handleClose}>
+      <TouchableOpacity style={styles.container} activeOpacity={1}>
         <BlurView style={styles.blur} intensity={70} tint="light" />
         <View style={styles.modalContainer}>
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
             <Feather name="x" size={24} color={myColors.TEXT_GREY_COLOR} />
           </TouchableOpacity>
-          <Text style={styles.title}>Estimate</Text>
+          <Text style={styles.title}>Твоя оценка</Text>
           <View style={styles.starsContainer}>
             {[...Array(5)].map((_, index) => (
               <TouchableOpacity
@@ -87,6 +74,8 @@ const EstimateModal = ({visible, onClose, movie, userInfo}) => {
     </Modal>
   );
 };
+
+export default EstimateModal;
 
 const styles = StyleSheet.create({
   container: {
@@ -133,5 +122,3 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
 });
-
-export default EstimateModal;

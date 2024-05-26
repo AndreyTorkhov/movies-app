@@ -8,43 +8,15 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import {API_URL} from '../../config';
 import React, {useState, useEffect} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {myColors} from '../../utils/Theme';
 import Feather from 'react-native-vector-icons/Feather';
 import StoryLine from '../../component/StoryLineBlock/StoryLine';
-import CastAndCrew from '../../component/CastAndCrewBlock/CastAndCrew';
 import EstimateModal from '../../component/EstimateModal/EstimateModal';
 import MovieSlider from '../../component/MainMovieCardsSlider/MovieSlider';
 import {useApi} from '../../apis/Network';
-
-const castAndCrewData = [
-  {
-    name: 'Actor 1',
-    role: 'Role 1',
-    image: 'https://source.unsplash.com/40x40/?men',
-  },
-  {
-    name: 'Actor 2',
-    role: 'Role 2',
-    image: 'https://source.unsplash.com/40x40/?women',
-  },
-  {
-    name: 'Actor 3',
-    role: 'Role 3',
-    image: 'https://source.unsplash.com/40x40/?dog',
-  },
-  {
-    name: 'Actor 4',
-    role: 'Role 4',
-    image: 'https://source.unsplash.com/40x40/?cat',
-  },
-  {
-    name: 'Actor 5',
-    role: 'Role 5',
-    image: 'https://source.unsplash.com/40x40/?mouse',
-  },
-];
 
 const Info = ({navigation}) => {
   const route = useRoute();
@@ -58,7 +30,6 @@ const Info = ({navigation}) => {
     }
   }, [initialUserInfo]);
 
-  // временно для слайдера
   const {getMovies} = useApi();
   const [movies, setMovies] = useState([]);
 
@@ -75,7 +46,6 @@ const Info = ({navigation}) => {
     fetchMovies();
   }, []);
 
-  // а это уже надо
   const [modalVisible, setModalVisible] = useState(false);
 
   const handlePlayerPress = movie => {
@@ -90,7 +60,7 @@ const Info = ({navigation}) => {
           style={styles.imageBackground}
           opacity={0.1}>
           <Image
-            source={{uri: `http://10.0.2.2:7000/${movie.main_img}`}}
+            source={{uri: `${API_URL}${movie.main_img}`}}
             style={styles.image}></Image>
 
           <View style={styles.description}>
@@ -114,7 +84,7 @@ const Info = ({navigation}) => {
               <Text
                 style={
                   styles.descriptionText
-                }>{`${movie.duration} minutes`}</Text>
+                }>{`${movie.duration} минуты`}</Text>
             </View>
 
             <View style={styles.genre}>
@@ -129,8 +99,12 @@ const Info = ({navigation}) => {
               size={16}
               color={myColors.PRIMARY_OREANGE_COLOR}
             />
-            {movie.estimations !== undefined && (
+            {movie.estimations !== null ? (
               <Text style={styles.estimationNum}>{`${movie.estimations}`}</Text>
+            ) : (
+              <Text style={styles.estimationText}>
+                никем не оценено, будь первым!
+              </Text>
             )}
           </View>
 
@@ -143,7 +117,7 @@ const Info = ({navigation}) => {
                 size={16}
                 color={myColors.TEXT_WHITE_COLOR}
               />
-              <Text style={styles.infoBtnPlayText}>Play</Text>
+              <Text style={styles.infoBtnPlayText}>Смотреть</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -154,7 +128,7 @@ const Info = ({navigation}) => {
                 size={16}
                 color={myColors.TEXT_WHITE_COLOR}
               />
-              <Text style={styles.infoBtnEstimationsText}>Estimate</Text>
+              <Text style={styles.infoBtnEstimationsText}>Оценить</Text>
             </TouchableOpacity>
           </View>
         </ImageBackground>
@@ -163,8 +137,6 @@ const Info = ({navigation}) => {
       <StoryLine title="Сюжет" initialLines={4}>
         {movie.descr}
       </StoryLine>
-
-      <CastAndCrew data={castAndCrewData} />
 
       <EstimateModal
         visible={modalVisible}
@@ -224,13 +196,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#252836',
-    width: 55,
+    minWidth: 55,
+    width: 'min-content',
     height: 24,
     borderRadius: 8,
     paddingHorizontal: 6,
   },
   estimationNum: {
     color: myColors.PRIMARY_OREANGE_COLOR,
+  },
+  estimationText: {
+    color: myColors.PRIMARY_OREANGE_COLOR,
+    fontSize: 14,
   },
   infoBtnContainer: {
     position: 'absolute',
@@ -249,7 +226,7 @@ const styles = StyleSheet.create({
     width: 115,
     borderRadius: 32,
     backgroundColor: myColors.PRIMARY_OREANGE_COLOR,
-    paddingHorizontal: 32,
+    paddingHorizontal: 20,
   },
   infoBtnPlayText: {
     color: myColors.TEXT_WHITE_COLOR,

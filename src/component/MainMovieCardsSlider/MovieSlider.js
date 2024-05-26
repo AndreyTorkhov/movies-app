@@ -9,8 +9,13 @@ import {
 } from 'react-native';
 import {myColors} from '../../utils/Theme.js';
 import {useNavigation} from '@react-navigation/native';
+import {API_URL} from '../../config.js';
 
-export default function MovieSlider({movies, title, userInfo}) {
+function truncate(str, maxLength) {
+  return str.length > maxLength ? str.substr(0, maxLength - 3) + '...' : str;
+}
+
+const MovieSlider = ({movies, title, userInfo}) => {
   const navigation = useNavigation();
 
   // console.log('movieSliders');
@@ -32,7 +37,7 @@ export default function MovieSlider({movies, title, userInfo}) {
             style={styles.card}
             onPress={() => handleMoviePress(movie, userInfo)}>
             <Image
-              source={{uri: `http://10.0.2.2:7000/${movie.main_img}`}}
+              source={{uri: `${API_URL}${movie.main_img}`}}
               style={styles.image}
             />
             <View style={styles.overlay}>
@@ -47,11 +52,9 @@ export default function MovieSlider({movies, title, userInfo}) {
       </ScrollView>
     </View>
   );
-}
+};
 
-function truncate(str, maxLength) {
-  return str.length > maxLength ? str.substr(0, maxLength - 3) + '...' : str;
-}
+export default MovieSlider;
 
 const styles = StyleSheet.create({
   container: {

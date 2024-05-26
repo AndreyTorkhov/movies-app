@@ -13,7 +13,10 @@ export const AuthProvider = ({children}) => {
   const login = async (email, password) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(`${API_URL}/login`, {email, password});
+      const response = await axios.post(`${API_URL}api/login`, {
+        email,
+        password,
+      });
       const userInfo = response.data;
       const {accessToken, refreshToken} = userInfo;
       if (accessToken && refreshToken) {
@@ -39,13 +42,14 @@ export const AuthProvider = ({children}) => {
   const register = async (email, password) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(`${API_URL}/registration`, {
+      const response = await axios.post(`${API_URL}api/registration`, {
         email,
         password,
       });
       const {accessToken, refreshToken} = response.data;
       if (accessToken && refreshToken) {
         setUserToken(accessToken);
+        setUserInfo(userInfo);
 
         await AsyncStorage.setItem('userInfo', JSON.stringify(response.data));
         await AsyncStorage.setItem('userToken', accessToken);
@@ -68,6 +72,7 @@ export const AuthProvider = ({children}) => {
   const logout = async () => {
     setIsLoading(true);
     setUserToken(null);
+    setUserInfo(null);
     await AsyncStorage.removeItem('userInfo');
     await AsyncStorage.removeItem('userToken');
     await AsyncStorage.removeItem('refreshToken');
@@ -78,8 +83,13 @@ export const AuthProvider = ({children}) => {
     try {
       setIsLoading(true);
       const userToken = await AsyncStorage.getItem('userToken');
+      const userInfoString = await AsyncStorage.getItem('userInfo');
       if (userToken) {
         setUserToken(userToken);
+        if (userInfoString) {
+          const userInfo = JSON.parse(userInfoString);
+          setUserInfo(userInfo);
+        }
       }
       setIsLoading(false);
     } catch (error) {
@@ -90,9 +100,6 @@ export const AuthProvider = ({children}) => {
   useEffect(() => {
     isLoggedIn();
   }, []);
-
-  // console.log('вот дата');
-  // console.log(userInfo);
 
   return (
     <AuthContext.Provider

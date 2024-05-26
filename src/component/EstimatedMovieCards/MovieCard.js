@@ -3,6 +3,7 @@ import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import {useNavigation} from '@react-navigation/native';
 import {myColors} from '../../utils/Theme';
+import {API_URL} from '../../config';
 
 const MovieCard = ({movie}) => {
   const navigation = useNavigation();
@@ -15,7 +16,7 @@ const MovieCard = ({movie}) => {
     <View style={styles.card}>
       <TouchableOpacity onPress={handlePress} style={styles.imageContainer}>
         <Image
-          source={{uri: `http://10.0.2.2:7000/${movie.horizontal_img}`}}
+          source={{uri: `${API_URL}${movie.horizontal_img}`}}
           style={styles.image}
         />
         <Feather
@@ -41,6 +42,8 @@ const MovieCard = ({movie}) => {
     </View>
   );
 };
+
+export default MovieCard;
 
 const styles = StyleSheet.create({
   card: {
@@ -97,5 +100,3 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
 });
-
-export default MovieCard;

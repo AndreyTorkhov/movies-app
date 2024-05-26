@@ -1,5 +1,13 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {StyleSheet, Text, ScrollView, View, SafeAreaView} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  ScrollView,
+  View,
+  SafeAreaView,
+  Image,
+  Dimensions,
+} from 'react-native';
 import {useApi} from '../../apis/Network';
 import {myColors} from '../../utils/Theme';
 import Feather from 'react-native-vector-icons/Feather';
@@ -8,11 +16,15 @@ import BottomNavigation from '../../component/BottomNavigation/BottomNavigation'
 import CustomSlider from '../../component/MainCarousel/CustomSlider';
 import {AuthContext} from '../../context/AuthContext';
 
+const {width} = Dimensions.get('window');
+
 const Home = ({navigation}) => {
   const {getMovies, getNewMovies, getRating} = useApi();
   const {userInfo} = useContext(AuthContext);
   const [movies, setMovies] = useState([]);
   const [newMovies, setNewMovies] = useState([]);
+
+  const noNewMoviesImage = require('../../assets/icons/noNew.jpg');
 
   // console.log('homePage');
   // console.log(userInfo);
@@ -47,6 +59,8 @@ const Home = ({navigation}) => {
     fetchMovies();
   }, []);
 
+  console.log(newMovies);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -61,15 +75,21 @@ const Home = ({navigation}) => {
           </View>
           <View style={styles.section_profile_information}>
             <Text style={styles.section_profile_text_greetings}>
-              Hello, dear user
+              Здравствуй, дорой пользователь
             </Text>
             <Text style={styles.section_profile_text_additionally}>
-              We wish you happy viewing!
+              Удачного просмотра!
             </Text>
           </View>
         </View>
 
-        <CustomSlider data={newMovies} userInfo={userInfo} />
+        <View style={styles.sliderContainer}>
+          {newMovies.length > 0 ? (
+            <CustomSlider data={newMovies} userInfo={userInfo} />
+          ) : (
+            <Image source={noNewMoviesImage} style={styles.noNewMoviesImage} />
+          )}
+        </View>
 
         <View style={styles.recommendConteiner}>
           <MovieSlider
@@ -91,12 +111,14 @@ const Home = ({navigation}) => {
   );
 };
 
+export default Home;
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     backgroundColor: myColors.PRIMARY_DARK_COLOR,
     alignSelf: 'flex-start',
-    paddingBottom: 120,
+    paddingBottom: 90,
   },
   section_profile: {
     paddingTop: 10,
@@ -134,11 +156,20 @@ const styles = StyleSheet.create({
     color: myColors.TEXT_WHITE_COLOR,
   },
   recommendConteiner: {
-    top: -640,
+    // top: -640,
   },
   allConteiner: {
-    top: -1170,
+    top: -550,
+  },
+  sliderContainer: {
+    width: '100%',
+    height: 180,
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  noNewMoviesImage: {
+    width: width * 0.75,
+    height: 155,
+    borderRadius: 10,
   },
 });
-
-export default Home;

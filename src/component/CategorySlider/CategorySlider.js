@@ -9,7 +9,7 @@ import {
 import {myColors} from '../../utils/Theme';
 import {useApi} from '../../apis/Network';
 
-export default function CategorySlider({selectedCategory, onCategoryPress}) {
+const CategorySlider = ({selectedCategory, onCategoryPress}) => {
   const [categories, setCategories] = useState(['All']);
   const {getMovies} = useApi();
 
@@ -60,7 +60,9 @@ export default function CategorySlider({selectedCategory, onCategoryPress}) {
       </ScrollView>
     </View>
   );
-}
+};
+
+export default CategorySlider;
 
 const styles = StyleSheet.create({
   container: {

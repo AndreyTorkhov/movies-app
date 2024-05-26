@@ -18,9 +18,22 @@ const Login = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
+  const validateEmail = email => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleLogin = async () => {
     if (!email || !password) {
       alert('Пожалуйста, заполните все поля');
+      return;
+    }
+    if (password.length < 4) {
+      alert('Длина пароля должна быть больше 4 символов');
+      return;
+    }
+    if (!validateEmail(email)) {
+      alert('Пожалуйста, введите корректный адрес электронной почты');
       return;
     }
     await login(email, password);
@@ -79,9 +92,7 @@ const Login = ({navigation}) => {
       <TouchableOpacity
         style={styles.authorization_btn}
         onPress={() => navigation.navigate('Sign Up')}>
-        <Text style={styles.containerOfHelpWithAuthorization}>
-          Forgot Password?
-        </Text>
+        <Text style={styles.containerOfHelpWithAuthorization}>First time?</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.buttonOnLoginScreen}

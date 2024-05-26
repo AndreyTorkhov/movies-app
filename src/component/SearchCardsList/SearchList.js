@@ -9,7 +9,12 @@ import {
 } from 'react-native';
 import {myColors} from '../../utils/Theme';
 import {useNavigation} from '@react-navigation/native';
+import {API_URL} from '../../config';
 import Feather from 'react-native-vector-icons/Feather';
+
+function truncate(str, maxLength) {
+  return str.length > maxLength ? str.substr(0, maxLength - 3) + '...' : str;
+}
 
 const SearchList = ({movies, userInfo}) => {
   const navigation = useNavigation();
@@ -17,9 +22,6 @@ const SearchList = ({movies, userInfo}) => {
   const handleMoviePress = (movie, userInfo) => {
     navigation.navigate('Info', {movie, userInfo});
   };
-
-  // console.log('SearchList');
-  // console.log(userInfo);
 
   return (
     <ScrollView contentContainerStyle={styles.cardsContainer}>
@@ -30,10 +32,10 @@ const SearchList = ({movies, userInfo}) => {
           onPress={() => handleMoviePress(movie, userInfo)}>
           <View style={styles.imageContainer}>
             <Image
-              source={{uri: `http://10.0.2.2:7000/${movie.main_img}`}}
+              source={{uri: `${API_URL}${movie.main_img}`}}
               style={styles.image}
             />
-            {movie.estimations !== undefined && (
+            {movie.estimations && (
               <View style={styles.ratingContainer}>
                 <Text style={styles.ratingText}>{movie.estimations}</Text>
               </View>
@@ -64,7 +66,7 @@ const SearchList = ({movies, userInfo}) => {
             </View>
             <View style={styles.genreContainer}>
               <Feather name="film" size={16} color={myColors.TEXT_GREY_COLOR} />
-              <Text style={styles.genreTitle}>{'Action |'}</Text>
+              <Text style={styles.genreTitle}>{'Жанр |'}</Text>
               <Text style={styles.genreText}>{movie.genre}</Text>
             </View>
           </View>
@@ -74,9 +76,7 @@ const SearchList = ({movies, userInfo}) => {
   );
 };
 
-function truncate(str, maxLength) {
-  return str.length > maxLength ? str.substr(0, maxLength - 3) + '...' : str;
-}
+export default SearchList;
 
 const styles = StyleSheet.create({
   cardsContainer: {
@@ -175,5 +175,3 @@ const styles = StyleSheet.create({
     color: myColors.TEXT_WHITE_COLOR,
   },
 });
-
-export default SearchList;

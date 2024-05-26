@@ -57,6 +57,8 @@ const BottomNavigation = ({userInfo}) => {
   );
 };
 
+export default BottomNavigation;
+
 const styles = StyleSheet.create({
   container: {
     width: '100%',
@@ -82,5 +84,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
-export default BottomNavigation;

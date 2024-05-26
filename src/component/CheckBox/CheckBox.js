@@ -2,14 +2,19 @@ import React, {Component} from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {myColors} from '../../utils/Theme';
 
-// в теории больше не нужен
 export class CheckBox extends Component {
   state = {
     isChecked: false,
   };
 
   toggleCheckBox = () => {
-    this.setState({isChecked: !this.state.isChecked});
+    const {onValueChange} = this.props;
+    const isChecked = !this.state.isChecked;
+    this.setState({isChecked}, () => {
+      if (onValueChange) {
+        onValueChange(isChecked);
+      }
+    });
   };
 
   render() {
