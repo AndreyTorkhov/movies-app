@@ -19,10 +19,11 @@ import {AuthContext} from '../../context/AuthContext';
 const {width} = Dimensions.get('window');
 
 const Home = ({navigation}) => {
-  const {getMovies, getNewMovies, getRating} = useApi();
+  const {getMovies, getNewMovies, getRating, getRecommends} = useApi();
   const {userInfo} = useContext(AuthContext);
   const [movies, setMovies] = useState([]);
   const [newMovies, setNewMovies] = useState([]);
+  const [recomendsMovies, setRecomendsMovies] = useState([]);
 
   const noNewMoviesImage = require('../../assets/icons/noNew.jpg');
 
@@ -30,10 +31,22 @@ const Home = ({navigation}) => {
   // console.log(userInfo);
 
   useEffect(() => {
+    console.log(userInfo);
+  }, [userInfo]);
+
+  useEffect(() => {
     const fetchMovies = async () => {
       try {
         const moviesData = await getMovies();
         const newMoviesData = await getNewMovies();
+        const recomendsData = await getRecommends();
+
+        const recomendsWithRatings = await Promise.all(
+          recomendsData.map(async movie => {
+            const rating = await getRating(movie.id);
+            return {...movie, estimations: rating.rating};
+          }),
+        );
 
         const moviesWithRatings = await Promise.all(
           moviesData.map(async movie => {
@@ -49,6 +62,7 @@ const Home = ({navigation}) => {
           }),
         );
 
+        setRecomendsMovies(recomendsWithRatings);
         setNewMovies(newMoviesWithRatings);
         setMovies(moviesWithRatings);
       } catch (error) {
@@ -58,8 +72,6 @@ const Home = ({navigation}) => {
 
     fetchMovies();
   }, []);
-
-  console.log(newMovies);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -93,7 +105,7 @@ const Home = ({navigation}) => {
 
         <View style={styles.recommendConteiner}>
           <MovieSlider
-            movies={movies}
+            movies={recomendsMovies}
             title={'Понравится вам'}
             userInfo={userInfo}
           />

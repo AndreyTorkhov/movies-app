@@ -24,12 +24,12 @@ const EstimateModal = ({visible, onClose, movie, userInfo}) => {
     setRating(newRating);
   };
 
-  // console.log('фильм:');
-  // console.log(movie.id);
-  // console.log('юзер:');
-  // console.log(userInfo.user.id);
-  // console.log('оценка:');
-  // console.log(rating);
+  console.log('фильм:');
+  console.log(movie.id);
+  console.log('юзер:');
+  console.log(userInfo.user.id);
+  console.log('оценка:');
+  console.log(rating);
 
   const handleClose = async () => {
     if (rating >= 1 && rating <= 5) {

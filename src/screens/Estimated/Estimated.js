@@ -17,6 +17,7 @@ const Estimated = () => {
   const {getUsersRatedMovies, getRating} = useApi();
   const [ratedMovies, setRatedMovies] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const route = useRoute();
   const params = route.params;
@@ -31,8 +32,11 @@ const Estimated = () => {
     let isMounted = true;
 
     const fetchRatedMovies = async () => {
+      console.log('я тут');
+      setIsLoading(true);
       if (!userInfo) return;
       try {
+        console.log('я там');
         const ratedMoviesData = await getUsersRatedMovies(userInfo.user.id);
         const moviesWithRatings = await Promise.all(
           ratedMoviesData.map(async movie => {
@@ -49,9 +53,8 @@ const Estimated = () => {
         }
       }
     };
-
     fetchRatedMovies();
-
+    setIsLoading(false);
     return () => {
       isMounted = false;
     };
@@ -78,6 +81,11 @@ const Estimated = () => {
             ))}
           </View>
         </ScrollView>
+      )}
+      {isLoading && (
+        <View>
+          <Text>Loading...</Text>
+        </View>
       )}
       <BottomNavigation />
     </SafeAreaView>

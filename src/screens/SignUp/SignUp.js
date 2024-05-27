@@ -78,11 +78,11 @@ const SignUp = ({navigation}) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}>
       <Text style={[styles.greetings, isKeyboardVisible && styles.hidden]}>
-        Let's get started
+        Давай начнем!
       </Text>
 
       <Text style={[styles.action, isKeyboardVisible && styles.hidden]}>
-        The latest movies and series are here
+        Актуальные фильмы здесь
       </Text>
 
       <View style={styles.inputView}>

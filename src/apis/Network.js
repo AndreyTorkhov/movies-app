@@ -112,7 +112,35 @@ export const useApi = () => {
     }
   };
 
-  return {getMovies, getNewMovies, getRating, getUsersRatedMovies, postRating};
+  const getRecommends = async userId => {
+    try {
+      const response = await api.get('/user/' + userId + '/recommendations');
+      return response.data;
+    } catch (error) {
+      console.error('Error getting recommends:', error);
+      throw error;
+    }
+  };
+
+  const getSimilars = async movieId => {
+    try {
+      const response = await api.get('/movies/' + movieId + '/similar');
+      return response.data;
+    } catch (error) {
+      console.error('Error getting similars:', error);
+      throw error;
+    }
+  };
+
+  return {
+    getMovies,
+    getNewMovies,
+    getRating,
+    getUsersRatedMovies,
+    postRating,
+    getRecommends,
+    getSimilars,
+  };
 };
 
 export default api;

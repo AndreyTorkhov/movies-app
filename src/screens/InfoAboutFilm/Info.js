@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import {API_URL} from '../../config';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {myColors} from '../../utils/Theme';
 import Feather from 'react-native-vector-icons/Feather';
@@ -17,27 +17,30 @@ import StoryLine from '../../component/StoryLineBlock/StoryLine';
 import EstimateModal from '../../component/EstimateModal/EstimateModal';
 import MovieSlider from '../../component/MainMovieCardsSlider/MovieSlider';
 import {useApi} from '../../apis/Network';
+import {AuthContext} from '../../context/AuthContext';
 
 const Info = ({navigation}) => {
   const route = useRoute();
-  const {movie, userInfo: initialUserInfo} = route.params;
+  const {movie} = route.params;
 
-  const [userInfo, setUserInfo] = useState(initialUserInfo);
+  const {userInfo} = useContext(AuthContext);
 
-  useEffect(() => {
-    if (initialUserInfo) {
-      setUserInfo(initialUserInfo);
-    }
-  }, [initialUserInfo]);
+  // const [userInfo, setUserInfo] = useState(initialUserInfo);
 
-  const {getMovies} = useApi();
-  const [movies, setMovies] = useState([]);
+  // useEffect(() => {
+  //   if (initialUserInfo) {
+  //     setUserInfo(initialUserInfo);
+  //   }
+  // }, [initialUserInfo]);
+
+  const {getSimilars} = useApi();
+  const [similars, setSimilars] = useState([]);
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const moviesData = await getMovies();
-        setMovies(moviesData);
+        const similarsData = await getSimilars(movie.id);
+        setSimilars(similarsData);
       } catch (error) {
         console.error('Failed to fetch movies:', error);
       }
@@ -146,7 +149,7 @@ const Info = ({navigation}) => {
       />
 
       <View style={styles.similarConteiner}>
-        <MovieSlider movies={movies} title={'Похожие фильмы'} />
+        <MovieSlider movies={similars} title={'Похожие фильмы'} />
       </View>
     </ScrollView>
   );

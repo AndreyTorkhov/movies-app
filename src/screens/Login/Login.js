@@ -60,10 +60,10 @@ const Login = ({navigation}) => {
     <KeyboardAvoidingView style={styles.container}>
       <StatusBar style="auto" />
       <Text style={[styles.greetings, isKeyboardVisible && styles.hidden]}>
-        Hi, Tiffany
+        Привет, дорогой пользователь
       </Text>
       <Text style={[styles.action, isKeyboardVisible && styles.hidden]}>
-        Welcome back! Please enter your details.
+        С возвращением! Пожалуйста, заполни поля.
       </Text>
 
       <View style={styles.inputView}>
