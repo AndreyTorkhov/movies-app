@@ -46,6 +46,7 @@ export const AuthProvider = ({children}) => {
         email,
         password,
       });
+      const userInfo = response.data;
       const {accessToken, refreshToken} = response.data;
       if (accessToken && refreshToken) {
         setUserToken(accessToken);

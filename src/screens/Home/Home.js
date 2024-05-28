@@ -9,12 +9,13 @@ import {
   Dimensions,
 } from 'react-native';
 import {useApi} from '../../apis/Network';
+import {AuthContext} from '../../context/AuthContext';
 import {myColors} from '../../utils/Theme';
 import Feather from 'react-native-vector-icons/Feather';
 import MovieSlider from '../../component/MainMovieCardsSlider/MovieSlider';
 import BottomNavigation from '../../component/BottomNavigation/BottomNavigation';
 import CustomSlider from '../../component/MainCarousel/CustomSlider';
-import {AuthContext} from '../../context/AuthContext';
+import Loader from '../../component/Loader/Loader';
 
 const {width} = Dimensions.get('window');
 
@@ -24,22 +25,17 @@ const Home = ({navigation}) => {
   const [movies, setMovies] = useState([]);
   const [newMovies, setNewMovies] = useState([]);
   const [recomendsMovies, setRecomendsMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const noNewMoviesImage = require('../../assets/icons/noNew.jpg');
 
-  // console.log('homePage');
-  // console.log(userInfo);
-
-  useEffect(() => {
-    console.log(userInfo);
-  }, [userInfo]);
-
   useEffect(() => {
     const fetchMovies = async () => {
+      setLoading(true);
       try {
         const moviesData = await getMovies();
         const newMoviesData = await getNewMovies();
-        const recomendsData = await getRecommends();
+        const recomendsData = await getRecommends(userInfo.user.id);
 
         const recomendsWithRatings = await Promise.all(
           recomendsData.map(async movie => {
@@ -65,13 +61,19 @@ const Home = ({navigation}) => {
         setRecomendsMovies(recomendsWithRatings);
         setNewMovies(newMoviesWithRatings);
         setMovies(moviesWithRatings);
+        setLoading(false);
       } catch (error) {
         console.error('Failed to fetch movies:', error);
+        setLoading(false);
       }
     };
 
     fetchMovies();
-  }, []);
+  }, [userInfo]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -109,6 +111,15 @@ const Home = ({navigation}) => {
             title={'Понравится вам'}
             userInfo={userInfo}
           />
+          {recomendsMovies.length > 0 ? (
+            <></>
+          ) : (
+            <View style={styles.noRecConteiner}>
+              <Text style={styles.noRecText}>
+                Пока ничего не могу вам порекомендовать...
+              </Text>
+            </View>
+          )}
         </View>
         <View style={styles.allConteiner}>
           <MovieSlider
@@ -131,6 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor: myColors.PRIMARY_DARK_COLOR,
     alignSelf: 'flex-start',
     paddingBottom: 90,
+    minHeight: '100%',
   },
   section_profile: {
     paddingTop: 10,
@@ -183,5 +195,13 @@ const styles = StyleSheet.create({
     width: width * 0.75,
     height: 155,
     borderRadius: 10,
+  },
+  noRecConteiner: {
+    marginLeft: 24,
+  },
+  noRecText: {
+    fontSize: 14,
+    color: myColors.TEXT_WHITE_COLOR,
+    fontWeight: 'bold',
   },
 });

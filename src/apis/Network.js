@@ -23,7 +23,7 @@ api.interceptors.request.use(
 const refreshAccessToken = async () => {
   try {
     const refreshToken = await AsyncStorage.getItem('refreshToken');
-    const response = await axios.get(`${API_URL}/refresh`, {
+    const response = await axios.get(`${API_URL}api/refresh`, {
       headers: {Authorization: `Bearer ${refreshToken}`},
     });
     const {accessToken} = response.data;
@@ -114,7 +114,7 @@ export const useApi = () => {
 
   const getRecommends = async userId => {
     try {
-      const response = await api.get('/user/' + userId + '/recommendations');
+      const response = await api.get(`user/${userId}/recommendations`);
       return response.data;
     } catch (error) {
       console.error('Error getting recommends:', error);

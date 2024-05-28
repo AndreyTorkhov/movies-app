@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
+import Loader from '../Loader/Loader';
 import {useNavigation} from '@react-navigation/native';
 import {myColors} from '../../utils/Theme';
 import {API_URL} from '../../config';

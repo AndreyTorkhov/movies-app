@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   SafeAreaView,
   View,
@@ -12,31 +12,20 @@ import {myColors} from '../../utils/Theme';
 import MovieCard from '../../component/EstimatedMovieCards/MovieCard';
 import {useApi} from '../../apis/Network';
 import {useRoute} from '@react-navigation/native';
+import Loader from '../../component/Loader/Loader';
+import {AuthContext} from '../../context/AuthContext';
 
 const Estimated = () => {
   const {getUsersRatedMovies, getRating} = useApi();
   const [ratedMovies, setRatedMovies] = useState([]);
-  const [userInfo, setUserInfo] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const route = useRoute();
-  const params = route.params;
+  const {userInfo} = useContext(AuthContext);
 
   useEffect(() => {
-    if (params?.userInfo) {
-      setUserInfo(params.userInfo);
-    }
-  }, [params]);
-
-  useEffect(() => {
-    let isMounted = true;
-
     const fetchRatedMovies = async () => {
-      console.log('я тут');
-      setIsLoading(true);
       if (!userInfo) return;
       try {
-        console.log('я там');
         const ratedMoviesData = await getUsersRatedMovies(userInfo.user.id);
         const moviesWithRatings = await Promise.all(
           ratedMoviesData.map(async movie => {
@@ -44,49 +33,43 @@ const Estimated = () => {
             return {...movie, estimations: rating.rating};
           }),
         );
-        if (isMounted) {
-          setRatedMovies(moviesWithRatings);
-        }
+        setRatedMovies(moviesWithRatings);
       } catch (error) {
-        if (isMounted) {
-          console.error('Failed to fetch rated movies:', JSON.stringify(error));
-        }
+        console.error('Failed to fetch rated movies:', JSON.stringify(error));
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchRatedMovies();
-    setIsLoading(false);
-    return () => {
-      isMounted = false;
-    };
   }, [userInfo]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {ratedMovies.length === 0 ? (
-        <ScrollView contentContainerStyle={styles.container}>
-          <Image
-            source={require('../../assets/icons/magic-box.png')}
-            style={styles.image}
-          />
-          <Text style={styles.title}>There Is No Movie Yet!</Text>
-          <Text style={styles.text}>
-            Find your movie by title or categories
-          </Text>
-        </ScrollView>
-      ) : (
-        <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
+        {loading ? (
+          <View style={styles.loaderContainer}>
+            <Loader />
+          </View>
+        ) : ratedMovies.length === 0 ? (
+          <>
+            <Image
+              source={require('../../assets/icons/magic-box.png')}
+              style={styles.image}
+            />
+            <Text style={styles.title}>There Is No Movie Yet!</Text>
+            <Text style={styles.text}>
+              Find your movie by title or categories
+            </Text>
+          </>
+        ) : (
           <View style={styles.cardsContainer}>
             {ratedMovies.map(movie => (
               <MovieCard key={movie.id} movie={movie} />
             ))}
           </View>
-        </ScrollView>
-      )}
-      {isLoading && (
-        <View>
-          <Text>Loading...</Text>
-        </View>
-      )}
+        )}
+      </ScrollView>
       <BottomNavigation />
     </SafeAreaView>
   );
@@ -100,10 +83,9 @@ const styles = StyleSheet.create({
     backgroundColor: myColors.PRIMARY_DARK_COLOR,
   },
   container: {
-    bottom: 80,
-    alignItems: 'center',
+    flexGrow: 1,
     justifyContent: 'center',
-    marginTop: 70,
+    alignItems: 'center',
     paddingBottom: 70,
   },
   image: {
@@ -123,5 +105,11 @@ const styles = StyleSheet.create({
     marginTop: 50,
     width: '100%',
     paddingHorizontal: 24,
+    alignItems: 'center',
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

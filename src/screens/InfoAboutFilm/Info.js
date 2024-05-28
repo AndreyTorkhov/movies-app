@@ -25,14 +25,6 @@ const Info = ({navigation}) => {
 
   const {userInfo} = useContext(AuthContext);
 
-  // const [userInfo, setUserInfo] = useState(initialUserInfo);
-
-  // useEffect(() => {
-  //   if (initialUserInfo) {
-  //     setUserInfo(initialUserInfo);
-  //   }
-  // }, [initialUserInfo]);
-
   const {getSimilars} = useApi();
   const [similars, setSimilars] = useState([]);
 

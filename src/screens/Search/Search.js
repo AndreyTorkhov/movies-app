@@ -5,16 +5,16 @@ import {
   StyleSheet,
   ScrollView,
   TextInput,
-  Image,
   SafeAreaView,
 } from 'react-native';
 import {useRoute} from '@react-navigation/native';
-import {Feather} from 'react-native-vector-icons';
+import Feather from 'react-native-vector-icons/Feather';
 import CategorySlider from '../../component/CategorySlider/CategorySlider';
 import BottomNavigation from '../../component/BottomNavigation/BottomNavigation';
 import {myColors} from '../../utils/Theme';
 import SearchList from '../../component/SearchCardsList/SearchList';
 import {useApi} from '../../apis/Network';
+import Loader from '../../component/Loader/Loader';
 
 const SearchScreen = () => {
   const {getMovies, getRating} = useApi();
@@ -24,12 +24,11 @@ const SearchScreen = () => {
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-
-  // console.log('Search');
-  // console.log(userInfo);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchMovies = async () => {
+      setLoading(true);
       try {
         const moviesData = await getMovies();
         const moviesWithRatings = await Promise.all(
@@ -43,8 +42,10 @@ const SearchScreen = () => {
         );
         setMovies(moviesWithRatings);
         setFilteredMovies(moviesWithRatings);
+        setLoading(false);
       } catch (error) {
         console.error('Failed to fetch movies:', error);
+        setLoading(false);
       }
     };
 
@@ -106,7 +107,13 @@ const SearchScreen = () => {
           />
         </View>
 
-        <SearchList movies={filteredMovies} userInfo={userInfo} />
+        <View style={styles.cardsContainer}>
+          {loading ? (
+            <Loader />
+          ) : (
+            <SearchList movies={filteredMovies} userInfo={userInfo} />
+          )}
+        </View>
       </ScrollView>
       <BottomNavigation />
     </SafeAreaView>
@@ -144,5 +151,10 @@ const styles = StyleSheet.create({
   },
   sliderContainer: {
     marginBottom: 16,
+  },
+  cardsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
